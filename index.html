@@ -267,7 +267,7 @@
   </div>
 
   <script>
-    // 🔗 LINK EXEC BAPAK
+    // 🔗 LINK EXEC BAPAK (MURNI TANPA /u/1/)
     const API_URL = "https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec";
 
     var listSiswa = [];
@@ -305,29 +305,35 @@
       }
     }
 
-    // FUNGSI UTAMA CALL API VIA JSONP / FETCH TANPA MTRIGGER CORS
+    // FUNGSI MUAT DATA (DITAMBAHKAN REDIRECT FOLLOW AGAR LOLOS CORS)
     function muatData() {
       var selectS = document.getElementById('selectSiswa');
       var selectK = document.getElementById('selectKejadian');
       selectS.innerHTML = '<option value="">-- Sedang Memuat Data Siswa... --</option>';
       selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
 
-      fetch(API_URL + "?action=getDaftarSiswa")
+      fetch(API_URL + "?action=getDaftarSiswa", { method: "GET", redirect: "follow" })
         .then(function(res) { return res.json(); })
         .then(function(res) {
-          listSiswa = res.data || [];
+          listSiswa = Array.isArray(res) ? res : (res.data || []);
           renderSelectSiswa(listSiswa);
           renderSelectProfilSiswa(listSiswa);
         })
-        .catch(function(err) { console.log("Gagal siswa: ", err); });
+        .catch(function(err) { 
+          console.log("Gagal siswa: ", err); 
+          selectS.innerHTML = '<option value="">-- Gagal Memuat Data Siswa --</option>';
+        });
 
-      fetch(API_URL + "?action=getReferensiPoin")
+      fetch(API_URL + "?action=getReferensiPoin", { method: "GET", redirect: "follow" })
         .then(function(res) { return res.json(); })
         .then(function(res) {
-          listPoin = res.data || [];
+          listPoin = Array.isArray(res) ? res : (res.data || []);
           renderSelectPoin(listPoin);
         })
-        .catch(function(err) { console.log("Gagal poin: ", err); });
+        .catch(function(err) { 
+          console.log("Gagal poin: ", err); 
+          selectK.innerHTML = '<option value="">-- Gagal Memuat Referensi Poin --</option>';
+        });
     }
 
     function renderSelectSiswa(data) {
@@ -424,7 +430,7 @@
       var nis = document.getElementById('selectProfilSiswa').value;
       if (!nis) return;
 
-      fetch(API_URL + "?action=getProfilSiswa&nis=" + encodeURIComponent(nis))
+      fetch(API_URL + "?action=getProfilSiswa&nis=" + encodeURIComponent(nis), { method: "GET", redirect: "follow" })
         .then(function(res) { return res.json(); })
         .then(function(res) {
           if (res.status === "success") {
@@ -503,6 +509,7 @@
       }
     }
 
+    // FUNGSI SIMPAN LAPORAN (DIUBAH KE CONTENT-TYPE TEXT/PLAIN AGAR TDK DIBLOKIR GOOGLE)
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -528,6 +535,7 @@
 
       fetch(API_URL, {
         method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(formData)
       })
       .then(function(res) { return res.json(); })
