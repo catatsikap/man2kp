@@ -1,32 +1,584 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Catat SikapKU - MAN 2 Kulon Progo</title>
-    <style>
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-            background-color: #0f172a; 
-        }
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-            display: block; 
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Catat SikapKU - MAN 2 Kulon Progo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+  body { font-family: 'Poppins', sans-serif; }
+  
+  /* Mencegah auto-zoom saat klik kolom input di HP */
+  input[type="text"], input[type="number"], input[type="password"], select, textarea {
+    font-size: 16px !important;
+  }
+
+  @media print {
+      body { background: white !important; padding: 0 !important; }
+      header, nav, #tabBtnInput, #tabBtnProfil, #searchProfilBox, .no-print { display: none !important; }
+      #areaCetak { display: block !important; border: none !important; box-shadow: none !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    }
+  </style>
 </head>
-<body>
-    <!-- Menambahkan izin sandbox dan referrerpolicy agar Chrome biasa meloloskan sesi anonim -->
-    <iframe src="https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec" 
-            allow="geolocation; microphone; camera"
-            referrerpolicy="no-referrer"
-            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts">
-    </iframe>
+<body class="bg-slate-100 min-h-screen pb-10 antialiased">
+  <div class="max-w-md mx-auto w-full px-3 sm:px-4">
+
+  <!-- Header Elegan Ikon 3D Transparan Murni -->
+  <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 no-print -mt-1 pt-2 pb-2">
+    <div class="max-w-md mx-auto px-4 py-1.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3.5">
+        
+        <div class="shrink-0 flex items-center justify-center w-11 h-11 relative"
+             style="filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5));">
+          <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2.5 rounded-xl border border-blue-400/40 shadow-inner flex items-center justify-center w-full h-full relative">
+            <i class="fa-solid fa-clipboard-check text-emerald-400 text-2xl transform -rotate-3" 
+               style="filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.6));"></i>
+            <i class="fa-solid fa-leaf text-emerald-300 text-xs absolute -top-1 -right-1 transform rotate-45"
+               style="filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));"></i>
+          </div>
+        </div>
+
+        <div>
+          <h1 class="font-extrabold text-base leading-tight tracking-wider text-white" 
+              style="text-shadow: 0px 2px 4px rgba(0,0,0,0.6);">
+            CATAT SIKAPKU
+          </h1>
+          <p class="text-[11px] text-blue-100 leading-tight font-medium mt-0.5"
+             style="text-shadow: 0px 1px 3px rgba(0,0,0,0.5);">
+            Catatan Sikap Murid Akuntabel & Transparan
+          </p>
+        </div>
+
+      </div>
+
+      <span class="text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full shadow-md border border-emerald-400 shrink-0 tracking-wider">
+        MAN 2 KP
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-4 mt-5">
+
+    <!-- Navigasi Tab Menu -->
+    <div class="flex bg-slate-200 p-1 rounded-xl mb-5 no-print">
+      <button onclick="switchTab('input')" id="tabBtnInput" class="w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition">
+        <i class="fa-solid fa-pen-to-square mr-1"></i> Input Kejadian
+      </button>
+      <button onclick="switchTab('profil')" id="tabBtnProfil" class="w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition">
+        <i class="fa-solid fa-id-card mr-1"></i> Profil / Cetak
+      </button>
+    </div>
+
+    <!-- TAB 1: FORMULIR INPUT KEJADIAN -->
+    <div id="tabInput" class="bg-white rounded-2xl shadow-md p-5 border border-slate-200">
+      <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-blue-600"></i> Input Laporan Kejadian
+        </h2>
+        <button type="button" onclick="muatData()" class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-lg border border-blue-200">
+          <i class="fa-solid fa-rotate"></i> Refresh
+        </button>
+      </div>
+
+      <form id="formLaporan" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            <i class="fa-regular fa-calendar-days text-blue-600 mr-1"></i> Waktu Kejadian
+          </label>
+          <input type="datetime-local" id="waktuKejadian" required
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50">
+          <p class="text-[10px] text-slate-400 mt-1">Default: Waktu saat ini. Ubah jika melaporkan kejadian lalu.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Guru Pelapor / Tim Tatib</label>
+          <input type="text" id="guruPelapor" required placeholder="Contoh: Pak Aziz / Piket"
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <!-- FITUR PILIH SISWA (MULTI-SISWA) -->
+        <div class="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-200">
+          <label class="block text-xs font-bold text-blue-900 mb-1">
+            <i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Cari & Tambah Siswa (Bisa Multi)
+          </label>
+          <p class="text-[10px] text-slate-500 mb-2">Pilih nama siswa lalu klik tombol <b>+ Tambah</b>. Bisa tambah lebih dari 1 siswa untuk kejadian rombongan.</p>
+          
+          <input type="text" id="searchSiswa" onkeyup="filterSiswa()" placeholder="Ketik NIS atau Nama Siswa..."
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-2 bg-white">
+          
+          <div class="flex gap-2 mb-2">
+            <select id="selectSiswa"
+              class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="">-- Sedang Memuat Data Siswa... --</option>
+            </select>
+            <button type="button" onclick="tambahSiswaDaftar()"
+              class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-xl shadow shrink-0 flex items-center gap-1">
+              <i class="fa-solid fa-plus"></i> Tambah
+            </button>
+          </div>
+
+          <div id="boxSiswaTerpilih" class="hidden space-y-1.5 mt-3 pt-2 border-t border-blue-200">
+            <p class="text-[11px] font-bold text-blue-900">Daftar Siswa Terpilih (<span id="countSiswa">0</span>):</p>
+            <div id="listSiswaPill" class="space-y-1 max-h-36 overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+
+        <!-- Cari & Pilih Jenis Kejadian -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Cari & Pilih Jenis Kejadian</label>
+          <input type="text" id="searchKejadian" onkeyup="filterKejadian()" placeholder="Ketik kata kunci: alp, bolos, seragam, dll..."
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-2">
+          <select id="selectKejadian" required onchange="pilihKejadianData()"
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="">-- Sedang Memuat Data Kejadian... --</option>
+          </select>
+        </div>
+
+        <input type="hidden" id="kategori">
+        <input type="hidden" id="detailLaporan">
+        <input type="hidden" id="poin">
+
+        <div id="infoPoin" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900">
+          <p><strong>Kategori:</strong> <span id="lblKategori">-</span></p>
+          <p><strong>Bobot Poin:</strong> <span id="lblPoin" class="font-bold text-slate-800">-</span></p>
+        </div>
+
+        <!-- PIN Guru -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            <i class="fa-solid fa-key text-amber-600 mr-1"></i> PIN Guru / Tim Tatib
+          </label>
+          <input type="password" id="pinGuru" required placeholder="Masukkan PIN Petugas..."
+            class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <p class="text-[10px] text-slate-400 mt-1">Khusus guru/petugas piket untuk verifikasi simpan laporan.</p>
+        </div>
+
+        <button type="submit" id="btnSubmit"
+          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 text-sm">
+          <i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan
+        </button>
+      </form>
+    </div>
+
+    <!-- TAB 2: PROFIL / CETAK -->
+    <div id="tabProfil" class="hidden space-y-5">
+      <div id="searchProfilBox" class="bg-white rounded-2xl shadow-md p-5 border border-slate-200 no-print">
+        <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2 border-b pb-2">
+          <i class="fa-solid fa-magnifying-glass text-blue-600"></i> Cari Profil Sikap Siswa
+        </h2>
+        <p class="text-xs text-slate-500 mb-3">Orang tua / Wali murid dapat mengetik nama atau NIS putra-putrinya untuk melihat rekapitulasi poin dan riwayat sikapnya.</p>
+        
+        <input type="text" id="searchProfilSiswaInput" onkeyup="filterProfilSiswa()" placeholder="Ketik NIS atau Nama Siswa..."
+          class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-2">
+        <select id="selectProfilSiswa" onchange="cariProfilSiswa()"
+          class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-3">
+          <option value="">-- Pilih Siswa --</option>
+        </select>
+      </div>
+
+      <!-- KARTU REKAPITULASI PROFIL -->
+      <div id="areaCetak" class="hidden bg-white rounded-2xl shadow-lg p-6 border border-slate-200 text-slate-800">
+        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+          <h3 class="font-bold text-base uppercase tracking-wide">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h3>
+          <h4 class="font-extrabold text-lg text-blue-900">MAN 2 KULON PROGO</h4>
+          <p class="text-xs italic text-slate-600">Kartu Rekapitulasi Catatan Sikap & Kedisiplinan Siswa</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200 mb-4">
+          <div>
+            <p class="text-slate-500">Nama Siswa:</p>
+            <p id="pNama" class="font-bold text-sm text-slate-900">-</p>
+          </div>
+          <div>
+            <p class="text-slate-500">NIS / Kelas:</p>
+            <p id="pNisKelas" class="font-semibold text-slate-800">-</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center mb-5">
+          <div class="bg-blue-50 border border-blue-200 p-2 rounded-xl">
+            <p class="text-[10px] text-blue-700 uppercase font-semibold">Poin Awal</p>
+            <p id="pPoinAwal" class="text-sm font-bold text-blue-900">5</p>
+          </div>
+          <div class="bg-red-50 border border-red-200 p-2 rounded-xl">
+            <p class="text-[10px] text-red-700 uppercase font-semibold">Pelanggaran</p>
+            <p id="pTotalPelanggaran" class="text-sm font-bold text-red-600">0</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl">
+            <p class="text-[10px] text-emerald-700 uppercase font-semibold">Sisa Poin</p>
+            <p id="pSisaPoin" class="text-base font-extrabold text-emerald-700">5</p>
+          </div>
+        </div>
+
+        <h5 class="text-xs font-bold mb-2 flex items-center justify-between">
+          <span><i class="fa-solid fa-list-check text-blue-600 mr-1"></i> Riwayat Laporan Sikap</span>
+        </h5>
+        
+        <div class="overflow-x-auto mb-6">
+          <table class="w-full text-xs text-left border-collapse border border-slate-300">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700">
+                <th class="border border-slate-300 px-2 py-1.5 w-24">Waktu</th>
+                <th class="border border-slate-300 px-2 py-1.5">Uraian Laporan</th>
+                <th class="border border-slate-300 px-2 py-1.5 w-16 text-center">Poin</th>
+              </tr>
+            </thead>
+            <tbody id="tBodyRiwayat">
+              <tr>
+                <td colspan="3" class="border border-slate-300 px-2 py-3 text-center text-slate-400 italic">Belum ada riwayat.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-slate-200 grid grid-cols-2 text-center text-xs">
+          <div>
+            <p>Orang Tua / Wali Siswa</p>
+            <div class="h-14"></div>
+            <p class="font-semibold underline">( .................................... )</p>
+          </div>
+          <div>
+            <p>Tim Kedisiplinan / Walas</p>
+            <div class="h-14"></div>
+            <p class="font-semibold underline">( .................................... )</p>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center no-print">
+          <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg text-xs inline-flex items-center gap-2">
+            <i class="fa-solid fa-print"></i> Cetak / Unduh PDF Profil
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal WA Multi-Siswa -->
+    <div id="modalWa" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4">
+        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h3 class="text-base font-bold text-slate-800">Laporan Berhasil Disimpan!</h3>
+        <p class="text-xs text-slate-600">Klik tombol di bawah untuk meneruskan notifikasi otomatis ke WhatsApp Wali Kelas masing-masing siswa:</p>
+        
+        <div id="containerTombolWa" class="space-y-2 max-h-48 overflow-y-auto text-left pr-1"></div>
+
+        <button onclick="closeModal()" class="text-xs text-slate-400 underline mt-2 block mx-auto">Tutup / Buat Laporan Baru</button>
+      </div>
+    </div>
+
+  </main>
+  </div>
+
+  <script>
+    // 🔗 URL WEB APP GOOGLE APPS SCRIPT BAPAK (PASTIKAN DENGAN AKHIRAN /exec)
+    const API_URL = "https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXx0xE1FQAxFPvmqJ0Ic34Sg/exec";
+
+    var listSiswa = [];
+    var listPoin = [];
+    var filteredPoinCurrent = [];
+    var arraySiswaTerpilih = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      setDefaultDatetime();
+      muatData();
+    });
+
+    function setDefaultDatetime() {
+      var now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('waktuKejadian').value = now.toISOString().slice(0, 16);
+    }
+
+    function switchTab(tab) {
+      var tabInput = document.getElementById('tabInput');
+      var tabProfil = document.getElementById('tabProfil');
+      var btnI = document.getElementById('tabBtnInput');
+      var btnP = document.getElementById('tabBtnProfil');
+
+      if (tab === 'input') {
+        tabInput.classList.remove('hidden');
+        tabProfil.classList.add('hidden');
+        btnI.className = "w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition";
+        btnP.className = "w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition";
+      } else {
+        tabInput.classList.add('hidden');
+        tabProfil.classList.remove('hidden');
+        btnP.className = "w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition";
+        btnI.className = "w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition";
+      }
+    }
+
+    function muatData() {
+      var selectS = document.getElementById('selectSiswa');
+      var selectK = document.getElementById('selectKejadian');
+      selectS.innerHTML = '<option value="">-- Sedang Memuat Data Siswa... --</option>';
+      selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
+
+      // Ambil Data Siswa via API
+      fetch(API_URL + "?action=getDaftarSiswa")
+        .then(res => res.json())
+        .then(res => {
+          listSiswa = res.data || [];
+          renderSelectSiswa(listSiswa);
+          renderSelectProfilSiswa(listSiswa);
+        })
+        .catch(err => alert("Gagal memuat siswa: " + err));
+
+      // Ambil Referensi Poin via API
+      fetch(API_URL + "?action=getReferensiPoin")
+        .then(res => res.json())
+        .then(res => {
+          listPoin = res.data || [];
+          renderSelectPoin(listPoin);
+        })
+        .catch(err => alert("Gagal memuat referensi poin: " + err));
+    }
+
+    function renderSelectSiswa(data) {
+      var select = document.getElementById('selectSiswa');
+      if (!data || data.length === 0) {
+        select.innerHTML = '<option value="">-- Data Siswa Kosong --</option>';
+        return;
+      }
+      var html = '<option value="">-- Pilih Siswa (' + data.length + ' data) --</option>';
+      for (var i = 0; i < data.length; i++) {
+        html += '<option value="' + data[i].nis + '">' + data[i].nama + ' (' + data[i].kelas + ')</option>';
+      }
+      select.innerHTML = html;
+    }
+
+    function filterSiswa() {
+      var q = document.getElementById('searchSiswa').value.toLowerCase();
+      var filtered = listSiswa.filter(function(s) { 
+        return String(s.nama).toLowerCase().indexOf(q) !== -1 || String(s.nis).toLowerCase().indexOf(q) !== -1;
+      });
+      renderSelectSiswa(filtered);
+    }
+
+    function tambahSiswaDaftar() {
+      var selectedNis = document.getElementById('selectSiswa').value;
+      if (!selectedNis) {
+        alert("Pilih siswa dari daftar terlebih dahulu!");
+        return;
+      }
+
+      var s = listSiswa.find(function(item) { return String(item.nis) === String(selectedNis); });
+      if (s) {
+        var sudahAda = arraySiswaTerpilih.some(function(x) { return String(x.nis) === String(s.nis); });
+        if (sudahAda) {
+          alert("Siswa " + s.nama + " sudah ada di daftar pilihan.");
+          return;
+        }
+
+        arraySiswaTerpilih.push(s);
+        updateTampilanDaftarSiswa();
+      }
+    }
+
+    function hapusSiswaDaftar(index) {
+      arraySiswaTerpilih.splice(index, 1);
+      updateTampilanDaftarSiswa();
+    }
+
+    function updateTampilanDaftarSiswa() {
+      var box = document.getElementById('boxSiswaTerpilih');
+      var container = document.getElementById('listSiswaPill');
+      var count = document.getElementById('countSiswa');
+
+      if (arraySiswaTerpilih.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.classList.remove('hidden');
+      count.innerText = arraySiswaTerpilih.length;
+
+      var html = '';
+      for (var i = 0; i < arraySiswaTerpilih.length; i++) {
+        var item = arraySiswaTerpilih[i];
+        html += '<div class="flex justify-between items-center bg-white px-2.5 py-1.5 rounded-xl border border-blue-200 text-xs shadow-sm">' +
+          '<span><strong class="text-blue-900">' + item.nama + '</strong> (' + item.kelas + ')</span>' +
+          '<button type="button" onclick="hapusSiswaDaftar(' + i + ')" class="text-red-500 hover:text-red-700 ml-2 font-bold px-1.5 py-0.5 rounded">' +
+            '<i class="fa-solid fa-xmark"></i>' +
+          '</button>' +
+        '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    function renderSelectProfilSiswa(data) {
+      var select = document.getElementById('selectProfilSiswa');
+      if (!data || data.length === 0) return;
+      var html = '<option value="">-- Pilih Siswa (' + data.length + ' data) --</option>';
+      for (var i = 0; i < data.length; i++) {
+        html += '<option value="' + data[i].nis + '">' + data[i].nama + ' (' + data[i].kelas + ')</option>';
+      }
+      select.innerHTML = html;
+    }
+
+    function filterProfilSiswa() {
+      var q = document.getElementById('searchProfilSiswaInput').value.toLowerCase();
+      var filtered = listSiswa.filter(function(s) { 
+        return String(s.nama).toLowerCase().indexOf(q) !== -1 || String(s.nis).toLowerCase().indexOf(q) !== -1;
+      });
+      renderSelectProfilSiswa(filtered);
+    }
+
+    function cariProfilSiswa() {
+      var nis = document.getElementById('selectProfilSiswa').value;
+      if (!nis) return;
+
+      fetch(API_URL + "?action=getProfilSiswa&nis=" + encodeURIComponent(nis))
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === "success") {
+            document.getElementById('pNama').innerText = res.siswa.nama;
+            document.getElementById('pNisKelas').innerText = res.siswa.nis + " / " + res.siswa.kelas;
+            document.getElementById('pPoinAwal').innerText = res.poinAwal;
+            document.getElementById('pTotalPelanggaran').innerText = res.totalPelanggaran;
+            
+            var sisaElem = document.getElementById('pSisaPoin');
+            sisaElem.innerText = res.sisaPoin;
+            if (res.sisaPoin < 0) {
+              sisaElem.className = "text-base font-extrabold text-red-600";
+            } else {
+              sisaElem.className = "text-base font-extrabold text-emerald-700";
+            }
+
+            var tbody = document.getElementById('tBodyRiwayat');
+            if (res.riwayat.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="3" class="border border-slate-300 px-2 py-3 text-center text-slate-400 italic">Bersih dari catatan pelanggaran/kejadian.</td></tr>';
+            } else {
+              var html = '';
+              for (var k = 0; k < res.riwayat.length; k++) {
+                var r = res.riwayat[k];
+                var colorClass = r.poin < 0 ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
+                html += '<tr>' +
+                  '<td class="border border-slate-300 px-2 py-1.5">' + r.tanggal + '</td>' +
+                  '<td class="border border-slate-300 px-2 py-1.5"><strong>[' + r.kategori + ']</strong> ' + r.detail + '<br><span class="text-[10px] text-slate-500">Pelapor: ' + r.pelapor + '</span></td>' +
+                  '<td class="border border-slate-300 px-2 py-1.5 text-center ' + colorClass + '">' + r.poin + '</td>' +
+                '</tr>';
+              }
+              tbody.innerHTML = html;
+            }
+
+            document.getElementById('areaCetak').classList.remove('hidden');
+          } else {
+            alert("Gagal memuat profil: " + res.message);
+          }
+        })
+        .catch(err => alert("Error koneksi profil: " + err));
+    }
+
+    function renderSelectPoin(data) {
+      filteredPoinCurrent = data || [];
+      var select = document.getElementById('selectKejadian');
+      if (!data || data.length === 0) {
+        select.innerHTML = '<option value="">-- Tidak ada kejadian ditemukan --</option>';
+        return;
+      }
+      var html = '<option value="">-- Pilih Laporan / Kejadian (' + data.length + ' data) --</option>';
+      for (var i = 0; i < data.length; i++) {
+        html += '<option value="' + i + '">[' + data[i].kategori + '] ' + data[i].detail + ' (' + data[i].poin + ' Poin)</option>';
+      }
+      select.innerHTML = html;
+    }
+
+    function filterKejadian() {
+      var q = document.getElementById('searchKejadian').value.toLowerCase();
+      var filtered = listPoin.filter(function(p) { 
+        return String(p.kategori).toLowerCase().indexOf(q) !== -1 || String(p.detail).toLowerCase().indexOf(q) !== -1;
+      });
+      renderSelectPoin(filtered);
+    }
+
+    function pilihKejadianData() {
+      var idx = document.getElementById('selectKejadian').value;
+      if (idx !== "") {
+        var p = filteredPoinCurrent[idx];
+        if (p) {
+          document.getElementById('kategori').value = p.kategori;
+          document.getElementById('detailLaporan').value = p.detail;
+          document.getElementById('poin').value = p.poin;
+          document.getElementById('lblKategori').innerText = p.kategori;
+          document.getElementById('lblPoin').innerText = p.poin + " Poin";
+          document.getElementById('infoPoin').classList.remove('hidden');
+        }
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      if (arraySiswaTerpilih.length === 0) {
+        alert("⚠️ Minimal wajib menambah 1 siswa terlebih dahulu ke daftar!");
+        return;
+      }
+
+      var btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Menyimpan Laporan (' + arraySiswaTerpilih.length + ' siswa)...';
+
+      var formData = {
+        action: "simpanLaporan",
+        waktuKejadian: document.getElementById('waktuKejadian').value,
+        guruPelapor: document.getElementById('guruPelapor').value,
+        daftarSiswa: arraySiswaTerpilih,
+        kategori: document.getElementById('kategori').value,
+        detailLaporan: document.getElementById('detailLaporan').value,
+        poin: document.getElementById('poin').value,
+        pinGuru: document.getElementById('pinGuru').value
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(formData)
+      })
+      .then(res => res.json())
+      .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+        if (res.status === "success") {
+          var listWa = res.daftarWa || [];
+          var containerWa = document.getElementById('containerTombolWa');
+          containerWa.innerHTML = '';
+
+          for (var w = 0; w < listWa.length; w++) {
+            var d = listWa[w];
+            var textWa = "Yth. Bapak/Ibu Wali Kelas " + d.kelas + " (" + d.namaWalas + "),\n\nInformasi Kedisiplinan Siswa dari Tim Tatib/Guru Piket MAN 2 Kulon Progo:\n• Nama: " + d.namaSiswa + "\n• NIS: " + d.nis + "\n• Waktu Kejadian: " + d.waktu + "\n• Laporan: " + d.detail + "\n• Poin Pengurangan: " + d.poin + "\n• Pelapor: " + d.pelapor + "\n\nMohon dapat ditindaklanjuti atau dikonfirmasikan kepada siswa/orang tua murid yang bersangkutan. Terima kasih.";
+            var urlWa = "https://api.whatsapp.com/send?phone=" + d.noWa + "&text=" + encodeURIComponent(textWa);
+
+            containerWa.innerHTML += 
+              '<a href="' + urlWa + '" target="_blank" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-2.5 rounded-xl text-xs flex items-center justify-between shadow">' +
+                '<span><i class="fa-brands fa-whatsapp text-sm mr-1"></i> WA Walas ' + d.namaSiswa + ' (' + d.kelas + ')</span>' +
+                '<i class="fa-solid fa-arrow-right"></i>' +
+              '</a>';
+          }
+
+          document.getElementById('modalWa').classList.remove('hidden');
+        } else {
+          alert("⚠️ " + res.message);
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+        alert("Error simpan: " + err);
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modalWa').classList.add('hidden');
+      document.getElementById('formLaporan').reset();
+      arraySiswaTerpilih = [];
+      updateTampilanDaftarSiswa();
+      setDefaultDatetime();
+      document.getElementById('infoPoin').classList.add('hidden');
+    }
+  </script>
 </body>
 </html>
