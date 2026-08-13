@@ -9,12 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
   body { font-family: 'Poppins', sans-serif; }
-  
-  /* Mencegah auto-zoom saat klik kolom input di HP */
   input[type="text"], input[type="number"], input[type="password"], select, textarea {
     font-size: 16px !important;
   }
-
   @media print {
       body { background: white !important; padding: 0 !important; }
       header, nav, #tabBtnInput, #tabBtnProfil, #searchProfilBox, .no-print { display: none !important; }
@@ -25,11 +22,10 @@
 <body class="bg-slate-100 min-h-screen pb-10 antialiased">
   <div class="max-w-md mx-auto w-full px-3 sm:px-4">
 
-  <!-- Header Elegan Ikon 3D Transparan Murni -->
+  <!-- Header -->
   <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 no-print -mt-1 pt-2 pb-2">
     <div class="max-w-md mx-auto px-4 py-1.5 flex items-center justify-between">
       <div class="flex items-center space-x-3.5">
-        
         <div class="shrink-0 flex items-center justify-center w-11 h-11 relative"
              style="filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5));">
           <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2.5 rounded-xl border border-blue-400/40 shadow-inner flex items-center justify-center w-full h-full relative">
@@ -39,7 +35,6 @@
                style="filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));"></i>
           </div>
         </div>
-
         <div>
           <h1 class="font-extrabold text-base leading-tight tracking-wider text-white" 
               style="text-shadow: 0px 2px 4px rgba(0,0,0,0.6);">
@@ -50,9 +45,7 @@
             Catatan Sikap Murid Akuntabel & Transparan
           </p>
         </div>
-
       </div>
-
       <span class="text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full shadow-md border border-emerald-400 shrink-0 tracking-wider">
         MAN 2 KP
       </span>
@@ -99,12 +92,12 @@
             class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
-        <!-- FITUR PILIH SISWA (MULTI-SISWA) -->
+        <!-- FITUR PILIH SISWA -->
         <div class="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-200">
           <label class="block text-xs font-bold text-blue-900 mb-1">
             <i class="fa-solid fa-user-plus text-blue-600 mr-1"></i> Cari & Tambah Siswa (Bisa Multi)
           </label>
-          <p class="text-[10px] text-slate-500 mb-2">Pilih nama siswa lalu klik tombol <b>+ Tambah</b>. Bisa tambah lebih dari 1 siswa untuk kejadian rombongan.</p>
+          <p class="text-[10px] text-slate-500 mb-2">Pilih nama siswa lalu klik tombol <b>+ Tambah</b>.</p>
           
           <input type="text" id="searchSiswa" onkeyup="filterSiswa()" placeholder="Ketik NIS atau Nama Siswa..."
             class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-2 bg-white">
@@ -274,7 +267,7 @@
   </div>
 
   <script>
-    // 🔗 URL WEB APP GOOGLE APPS SCRIPT BAPAK (PASTIKAN DENGAN AKHIRAN /exec)
+    // 🔗 LINK EXEC BAPAK
     const API_URL = "https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXx0xE1FQAxFPvmqJ0Ic34Sg/exec";
 
     var listSiswa = [];
@@ -312,30 +305,29 @@
       }
     }
 
+    // FUNGSI UTAMA CALL API VIA JSONP / FETCH TANPA MTRIGGER CORS
     function muatData() {
       var selectS = document.getElementById('selectSiswa');
       var selectK = document.getElementById('selectKejadian');
       selectS.innerHTML = '<option value="">-- Sedang Memuat Data Siswa... --</option>';
       selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
 
-      // Ambil Data Siswa via API
-      fetch(API_URL + "?action=getDaftarSiswa", { method: "GET", redirect: "follow" })
-        .then(res => res.json())
-        .then(res => {
+      fetch(API_URL + "?action=getDaftarSiswa")
+        .then(function(res) { return res.json(); })
+        .then(function(res) {
           listSiswa = res.data || [];
           renderSelectSiswa(listSiswa);
           renderSelectProfilSiswa(listSiswa);
         })
-        .catch(err => console.error("Gagal memuat siswa:", err));
+        .catch(function(err) { console.log("Gagal siswa: ", err); });
 
-      // Ambil Referensi Poin via API
-      fetch(API_URL + "?action=getReferensiPoin", { method: "GET", redirect: "follow" })
-        .then(res => res.json())
-        .then(res => {
+      fetch(API_URL + "?action=getReferensiPoin")
+        .then(function(res) { return res.json(); })
+        .then(function(res) {
           listPoin = res.data || [];
           renderSelectPoin(listPoin);
         })
-        .catch(err => console.error("Gagal memuat referensi poin:", err));
+        .catch(function(err) { console.log("Gagal poin: ", err); });
     }
 
     function renderSelectSiswa(data) {
@@ -433,8 +425,8 @@
       if (!nis) return;
 
       fetch(API_URL + "?action=getProfilSiswa&nis=" + encodeURIComponent(nis))
-        .then(res => res.json())
-        .then(res => {
+        .then(function(res) { return res.json(); })
+        .then(function(res) {
           if (res.status === "success") {
             document.getElementById('pNama').innerText = res.siswa.nama;
             document.getElementById('pNisKelas').innerText = res.siswa.nis + " / " + res.siswa.kelas;
@@ -471,7 +463,7 @@
             alert("Gagal memuat profil: " + res.message);
           }
         })
-        .catch(err => alert("Error koneksi profil: " + err));
+        .catch(function(err) { alert("Error koneksi profil: " + err); });
     }
 
     function renderSelectPoin(data) {
@@ -538,8 +530,8 @@
         method: "POST",
         body: JSON.stringify(formData)
       })
-      .then(res => res.json())
-      .then(res => {
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
         if (res.status === "success") {
@@ -564,7 +556,7 @@
           alert("⚠️ " + res.message);
         }
       })
-      .catch(err => {
+      .catch(function(err) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
         alert("Error simpan: " + err);
