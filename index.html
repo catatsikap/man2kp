@@ -319,23 +319,23 @@
       selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
 
       // Ambil Data Siswa via API
-      fetch(API_URL + "?action=getDaftarSiswa")
+      fetch(API_URL + "?action=getDaftarSiswa", { method: "GET", redirect: "follow" })
         .then(res => res.json())
         .then(res => {
           listSiswa = res.data || [];
           renderSelectSiswa(listSiswa);
           renderSelectProfilSiswa(listSiswa);
         })
-        .catch(err => alert("Gagal memuat siswa: " + err));
+        .catch(err => console.error("Gagal memuat siswa:", err));
 
       // Ambil Referensi Poin via API
-      fetch(API_URL + "?action=getReferensiPoin")
+      fetch(API_URL + "?action=getReferensiPoin", { method: "GET", redirect: "follow" })
         .then(res => res.json())
         .then(res => {
           listPoin = res.data || [];
           renderSelectPoin(listPoin);
         })
-        .catch(err => alert("Gagal memuat referensi poin: " + err));
+        .catch(err => console.error("Gagal memuat referensi poin:", err));
     }
 
     function renderSelectSiswa(data) {
