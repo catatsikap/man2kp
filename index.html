@@ -22,6 +22,11 @@
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec" allow="geolocation; microphone; camera"></iframe>
+    <!-- Menambahkan izin sandbox dan referrerpolicy agar Chrome biasa meloloskan sesi anonim -->
+    <iframe src="https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec" 
+            allow="geolocation; microphone; camera"
+            referrerpolicy="no-referrer"
+            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts">
+    </iframe>
 </body>
 </html>
