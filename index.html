@@ -248,6 +248,31 @@
       </div>
     </div>
 
+    <!-- MODAL PERINGATAN DUPLIKASI HARIAN -->
+    <div id="modalDuplikasi" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-left space-y-3">
+        <div class="flex items-center gap-2 text-amber-600">
+          <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+          <h3 class="text-sm font-bold text-slate-800">Peringatan Laporan Ganda!</h3>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Siswa di bawah ini sudah dilaporkan untuk kasus serupa pada hari ini:
+        </p>
+        <div id="listDetailDuplikasi" class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs text-amber-900 space-y-1 max-h-36 overflow-y-auto"></div>
+        <p class="text-[11px] font-medium text-slate-500">
+          Apakah ini kejadian pembangkangan baru / berulang yang ingin tetap Anda simpan?
+        </p>
+        <div class="flex gap-2 pt-2">
+          <button onclick="batalSimpanDuplikasi()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 rounded-xl text-xs">
+            Batal
+          </button>
+          <button onclick="eksekusiSimpanLaporan()" class="w-1/2 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 rounded-xl text-xs shadow">
+            Ya, Tetap Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal WA Multi-Siswa -->
     <div id="modalWa" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
       <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4">
@@ -305,7 +330,6 @@
       }
     }
 
-    // FUNGSI MUAT DATA (DITAMBAHKAN REDIRECT FOLLOW AGAR LOLOS CORS)
     function muatData() {
       var selectS = document.getElementById('selectSiswa');
       var selectK = document.getElementById('selectKejadian');
@@ -509,7 +533,7 @@
       }
     }
 
-    // FUNGSI SIMPAN LAPORAN (DIUBAH KE CONTENT-TYPE TEXT/PLAIN AGAR TDK DIBLOKIR GOOGLE)
+    // FUNGSI CEK DUPLIKASI HARIAN SEBELUM SIMPAN
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -517,6 +541,60 @@
         alert("⚠️ Minimal wajib menambah 1 siswa terlebih dahulu ke daftar!");
         return;
       }
+
+      var poinVal = Number(document.getElementById('poin').value) || 0;
+      var detailVal = document.getElementById('detailLaporan').value;
+      var tglVal = document.getElementById('waktuKejadian').value;
+
+      // KECUALIKAN POIN PENAMBAH (PRESTASI) DARI CEK DUPLIKASI
+      if (poinVal >= 0) {
+        eksekusiSimpanLaporan();
+        return;
+      }
+
+      var btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memeriksa riwayat hari ini...';
+
+      var nisArr = arraySiswaTerpilih.map(function(s) { return s.nis; }).join(",");
+      var urlCek = API_URL + "?action=cekDuplikasi&nisList=" + encodeURIComponent(nisArr) + 
+                   "&detail=" + encodeURIComponent(detailVal) + 
+                   "&tanggal=" + encodeURIComponent(tglVal);
+
+      fetch(urlCek, { method: "GET", redirect: "follow" })
+        .then(function(res) { return res.json(); })
+        .then(function(res) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+
+          if (res.status === "success" && res.duplikasi && res.duplikasi.length > 0) {
+            // TAMPILKAN POP-UP CONFRMATION
+            var containerList = document.getElementById('listDetailDuplikasi');
+            var html = '';
+            for (var d = 0; d < res.duplikasi.length; d++) {
+              var item = res.duplikasi[d];
+              html += '<div>• <b>' + item.nama + '</b> dilaporkan oleh <b>' + item.pelapor + '</b>' + (item.jam ? ' (Pukul ' + item.jam + ')' : '') + '</div>';
+            }
+            containerList.innerHTML = html;
+            document.getElementById('modalDuplikasi').classList.remove('hidden');
+          } else {
+            eksekusiSimpanLaporan();
+          }
+        })
+        .catch(function(err) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+          // Jika cek gagal, tetap izinkan simpan
+          eksekusiSimpanLaporan();
+        });
+    }
+
+    function batalSimpanDuplikasi() {
+      document.getElementById('modalDuplikasi').classList.add('hidden');
+    }
+
+    function eksekusiSimpanLaporan() {
+      document.getElementById('modalDuplikasi').classList.add('hidden');
 
       var btn = document.getElementById('btnSubmit');
       btn.disabled = true;
