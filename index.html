@@ -321,6 +321,7 @@
           isAdminLoggedIn = false;
           localStorage.removeItem("tatib_admin_auth");
           updateTampilanAdmin();
+          switchTab('input'); // Kembalikan ke tab input jika sedang di profil
           alert("Berhasil Logout dari mode Admin.");
         }
       } else {
@@ -335,7 +336,7 @@
 
     function verifikasiPinAdmin() {
       var pin = document.getElementById('inputPinAdmin').value.trim();
-      // PIN khusus admin tatib (bisa disesuaikan, misal "2026" atau PIN khusus lainnya)
+      // PIN khusus admin tatib ("2026")
       if (pin === "2026") {
         isAdminLoggedIn = true;
         localStorage.setItem("tatib_admin_auth", "true");
@@ -365,6 +366,13 @@
     }
 
     function switchTab(tab) {
+      // Proteksi Akses Tab Profil/Cetak khusus Admin
+      if (tab === 'profil' && !isAdminLoggedIn) {
+        alert("🔒 Akses Terbatas! Fitur Profil & Cetak hanya dapat dibuka oleh Admin/Tim Tatib.");
+        bukaModalAdmin();
+        return;
+      }
+
       var tabInput = document.getElementById('tabInput');
       var tabProfil = document.getElementById('tabProfil');
       var btnI = document.getElementById('tabBtnInput');
@@ -504,6 +512,13 @@
     }
 
     function cariProfilSiswa() {
+      // Proteksi Ekstra: Wajib Login Admin untuk Mengambil Profil Siswa
+      if (!isAdminLoggedIn) {
+        alert("🔒 Akses Terbatas! Silakan masukkan PIN Admin terlebih dahulu.");
+        bukaModalAdmin();
+        return;
+      }
+
       var nis = document.getElementById('selectProfilSiswa').value;
       if (!nis) return;
 
