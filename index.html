@@ -9,9 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
   body { font-family: 'Poppins', sans-serif; }
+  
+  /* Mencegah auto-zoom saat klik kolom input di HP */
   input[type="text"], input[type="number"], input[type="password"], select, textarea {
     font-size: 16px !important;
   }
+
   @media print {
       body { background: white !important; padding: 0 !important; }
       header, nav, #tabBtnInput, #tabBtnProfil, #searchProfilBox, .no-print { display: none !important; }
@@ -22,13 +25,13 @@
 <body class="bg-slate-100 min-h-screen pb-10 antialiased">
   <div class="max-w-md mx-auto w-full px-3 sm:px-4">
 
-  <!-- Header -->
+  <!-- Header Elegan Ikon 3D Transparan Murni -->
   <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 no-print -mt-1 pt-2 pb-2">
     <div class="max-w-md mx-auto px-4 py-1.5 flex items-center justify-between">
       <div class="flex items-center space-x-3.5">
         <div class="shrink-0 flex items-center justify-center w-11 h-11 relative"
              style="filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5));">
-          <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2.5 rounded-xl border border-blue-400/40 shadow-inner flex items-center justify-center w-full h-full relative">
+          <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2.5 rounded-xl border border-blue-400/45 shadow-inner flex items-center justify-center w-full h-full relative">
             <i class="fa-solid fa-clipboard-check text-emerald-400 text-2xl transform -rotate-3" 
                style="filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.6));"></i>
             <i class="fa-solid fa-leaf text-emerald-300 text-xs absolute -top-1 -right-1 transform rotate-45"
@@ -46,11 +49,12 @@
           </p>
         </div>
       </div>
+      
+      <!-- Badge Akses & Tombol Admin -->
       <div class="flex items-center gap-1.5">
         <span class="text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full shadow-md border border-emerald-400 shrink-0 tracking-wider">
           MAN 2 KP
         </span>
-        <!-- Tombol Akses Admin / Tatib -->
         <button onclick="bukaModalAdmin()" id="btnStatusAdmin" class="text-[10px] bg-slate-700 hover:bg-slate-800 text-slate-200 font-bold px-2 py-1 rounded-lg shadow border border-slate-600 transition">
           <i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Admin
         </button>
@@ -82,7 +86,6 @@
       </div>
 
       <form id="formLaporan" onsubmit="handleFormSubmit(event)" class="space-y-4">
-        
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">
             <i class="fa-regular fa-calendar-days text-blue-600 mr-1"></i> Waktu Kejadian
@@ -286,29 +289,27 @@
           <i class="fa-solid fa-check"></i>
         </div>
         <h3 class="text-base font-bold text-slate-800">Laporan Berhasil Disimpan!</h3>
-        <p class="text-xs text-slate-600">Klik tombol di bawah untuk meneruskan notifikasi otomatis ke WhatsApp Wali Kelas:</p>
+        <p class="text-xs text-slate-600">Klik tombol di bawah untuk meneruskan notifikasi otomatis ke WhatsApp Wali Kelas masing-masing siswa:</p>
+        
         <div id="containerTombolWa" class="space-y-2 max-h-48 overflow-y-auto text-left pr-1"></div>
-        <button onclick="closeModal()" class="text-xs text-slate-400 underline mt-2 block mx-auto">Tutup / Selesai</button>
+
+        <button onclick="closeModal()" class="text-xs text-slate-400 underline mt-2 block mx-auto">Tutup / Buat Laporan Baru</button>
       </div>
     </div>
 
   </main>
-  </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec";
-
     var listSiswa = [];
     var listPoin = [];
     var filteredPoinCurrent = [];
     var arraySiswaTerpilih = [];
-    var isAdminLoggedIn = false; // Status hak akses admin lokal
+    var isAdminLoggedIn = false;
 
     document.addEventListener('DOMContentLoaded', function() {
       setDefaultDatetime();
       muatData();
-      
-      // Cek apakah sebelumnya sudah login sebagai admin di sesi browser ini
+
       if (localStorage.getItem("tatib_admin_auth") === "true") {
         isAdminLoggedIn = true;
         updateTampilanAdmin();
@@ -321,7 +322,7 @@
           isAdminLoggedIn = false;
           localStorage.removeItem("tatib_admin_auth");
           updateTampilanAdmin();
-          switchTab('input'); // Kembalikan ke tab input jika sedang di profil
+          switchTab('input');
           alert("Berhasil Logout dari mode Admin.");
         }
       } else {
@@ -336,7 +337,6 @@
 
     function verifikasiPinAdmin() {
       var pin = document.getElementById('inputPinAdmin').value.trim();
-      // PIN khusus admin tatib ("2026")
       if (pin === "2026") {
         isAdminLoggedIn = true;
         localStorage.setItem("tatib_admin_auth", "true");
@@ -366,7 +366,6 @@
     }
 
     function switchTab(tab) {
-      // Proteksi Akses Tab Profil/Cetak khusus Admin
       if (tab === 'profil' && !isAdminLoggedIn) {
         alert("🔒 Akses Terbatas! Fitur Profil & Cetak hanya dapat dibuka oleh Admin/Tim Tatib.");
         bukaModalAdmin();
@@ -397,28 +396,16 @@
       selectS.innerHTML = '<option value="">-- Sedang Memuat Data Siswa... --</option>';
       selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
 
-      fetch(API_URL + "?action=getDaftarSiswa", { method: "GET", redirect: "follow" })
-        .then(function(res) { return res.json(); })
-        .then(function(res) {
-          listSiswa = Array.isArray(res) ? res : (res.data || []);
-          renderSelectSiswa(listSiswa);
-          renderSelectProfilSiswa(listSiswa);
-        })
-        .catch(function(err) { 
-          console.log("Gagal siswa: ", err); 
-          selectS.innerHTML = '<option value="">-- Gagal Memuat Data Siswa --</option>';
-        });
+      google.script.run.withSuccessHandler(function(data) {
+        listSiswa = data || [];
+        renderSelectSiswa(listSiswa);
+        renderSelectProfilSiswa(listSiswa);
+      }).getDaftarSiswa();
 
-      fetch(API_URL + "?action=getReferensiPoin", { method: "GET", redirect: "follow" })
-        .then(function(res) { return res.json(); })
-        .then(function(res) {
-          listPoin = Array.isArray(res) ? res : (res.data || []);
-          renderSelectPoin(listPoin);
-        })
-        .catch(function(err) { 
-          console.log("Gagal poin: ", err); 
-          selectK.innerHTML = '<option value="">-- Gagal Memuat Referensi Poin --</option>';
-        });
+      google.script.run.withSuccessHandler(function(data) {
+        listPoin = data || [];
+        renderSelectPoin(listPoin);
+      }).getReferensiPoin();
     }
 
     function renderSelectSiswa(data) {
@@ -512,7 +499,6 @@
     }
 
     function cariProfilSiswa() {
-      // Proteksi Ekstra: Wajib Login Admin untuk Mengambil Profil Siswa
       if (!isAdminLoggedIn) {
         alert("🔒 Akses Terbatas! Silakan masukkan PIN Admin terlebih dahulu.");
         bukaModalAdmin();
@@ -522,51 +508,115 @@
       var nis = document.getElementById('selectProfilSiswa').value;
       if (!nis) return;
 
-      fetch(API_URL + "?action=getProfilSiswa&nis=" + encodeURIComponent(nis), { method: "GET", redirect: "follow" })
-        .then(function(res) { return res.json(); })
-        .then(function(res) {
-          if (res.status === "success") {
-            document.getElementById('pNama').innerText = res.siswa.nama;
-            document.getElementById('pNisKelas').innerText = res.siswa.nis + " / " + res.siswa.kelas;
-            document.getElementById('pPoinAwal').innerText = res.poinAwal;
-            document.getElementById('pTotalPelanggaran').innerText = res.totalPelanggaran;
-            
-            var sisaElem = document.getElementById('pSisaPoin');
-            sisaElem.innerText = res.sisaPoin;
-            if (res.sisaPoin < 0) {
-              sisaElem.className = "text-base font-extrabold text-red-600";
-            } else {
-              sisaElem.className = "text-base font-extrabold text-emerald-700";
-            }
-
-            var tbody = document.getElementById('tBodyRiwayat');
-            if (res.riwayat.length === 0) {
-              tbody.innerHTML = '<tr><td colspan="3" class="border border-slate-300 px-2 py-3 text-center text-slate-400 italic">Bersih dari catatan pelanggaran/kejadian.</td></tr>';
-            } else {
-              var html = '';
-              for (var k = 0; k < res.riwayat.length; k++) {
-                var r = res.riwayat[k];
-                var colorClass = r.poin < 0 ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
-                
-                // Variabel tombol aksi khusus admin
-                var tombolAksiAdmin = isAdminLoggedIn ? 
-                  '<br><button onclick="editLaporan(\'' + nis + '\', ' + k + ')" class="text-[10px] bg-amber-500 hover:bg-amber-600 text-white px-2 py-0.5 rounded mt-1 shadow"><i class="fa-solid fa-pen"></i> Edit</button>' : '';
-
-                html += '<tr>' +
-                  '<td class="border border-slate-300 px-2 py-1.5">' + r.tanggal + '</td>' +
-                  '<td class="border border-slate-300 px-2 py-1.5"><strong>[' + r.kategori + ']</strong> ' + r.detail + '<br><span class="text-[10px] text-slate-500">Pelapor: ' + r.pelapor + '</span>' + tombolAksiAdmin + '</td>' +
-                  '<td class="border border-slate-300 px-2 py-1.5 text-center ' + colorClass + '">' + r.poin + '</td>' +
-                '</tr>';
-              }
-              tbody.innerHTML = html;
-            }
-
-            document.getElementById('areaCetak').classList.remove('hidden');
+      google.script.run.withSuccessHandler(function(res) {
+        if (res.status === "success") {
+          document.getElementById('pNama').innerText = res.siswa.nama;
+          document.getElementById('pNisKelas').innerText = res.siswa.nis + " / " + res.siswa.kelas;
+          document.getElementById('pPoinAwal').innerText = res.poinAwal;
+          document.getElementById('pTotalPelanggaran').innerText = res.totalPelanggaran;
+          
+          var sisaElem = document.getElementById('pSisaPoin');
+          sisaElem.innerText = res.sisaPoin;
+          if (res.sisaPoin < 0) {
+            sisaElem.className = "text-base font-extrabold text-red-600";
           } else {
-            alert("Gagal memuat profil: " + res.message);
+            sisaElem.className = "text-base font-extrabold text-emerald-700";
+          }
+
+          var tbody = document.getElementById('tBodyRiwayat');
+          if (res.riwayat.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="border border-slate-300 px-2 py-3 text-center text-slate-400 italic">Bersih dari catatan pelanggaran/kejadian.</td></tr>';
+          } else {
+            var html = '';
+            for (var k = 0; k < res.riwayat.length; k++) {
+              var r = res.riwayat[k];
+              var colorClass = r.poin < 0 ? "text-red-600 font-bold" : "text-emerald-600 font-bold";
+              
+              var detailClean = String(r.detail).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+              var katClean = String(r.kategori).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+              var tombolAksiAdmin = isAdminLoggedIn ? 
+                '<div class="flex gap-1 mt-1.5">' +
+                  '<button onclick="eksekusiEditLaporan(\'' + r.id + '\', \'' + katClean + '\', \'' + detailClean + '\', \'' + r.poin + '\')" class="text-[10px] bg-amber-500 hover:bg-amber-600 text-white px-2 py-0.5 rounded shadow"><i class="fa-solid fa-pen"></i> Edit</button>' +
+                  '<button onclick="eksekusiHapusLaporan(\'' + r.id + '\')" class="text-[10px] bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded shadow"><i class="fa-solid fa-trash"></i> Hapus</button>' +
+                '</div>' : '';
+
+              html += '<tr>' +
+                '<td class="border border-slate-300 px-2 py-1.5">' + r.tanggal + '</td>' +
+                '<td class="border border-slate-300 px-2 py-1.5"><strong>[' + r.kategori + ']</strong> ' + r.detail + '<br><span class="text-[10px] text-slate-500">Pelapor: ' + r.pelapor + '</span>' + tombolAksiAdmin + '</td>' +
+                '<td class="border border-slate-300 px-2 py-1.5 text-center ' + colorClass + '">' + r.poin + '</td>' +
+              '</tr>';
+            }
+            tbody.innerHTML = html;
+          }
+
+          document.getElementById('areaCetak').classList.remove('hidden');
+        } else {
+          alert("Gagal memuat profil: " + res.message);
+        }
+      }).getProfilSiswa(nis);
+    }
+
+    function eksekusiHapusLaporan(idLaporan) {
+      if (!confirm("Apakah Anda yakin ingin menghapus laporan ini secara permanen dari spreadsheet?")) return;
+
+      var pin = prompt("Masukkan PIN Admin untuk konfirmasi hapus:");
+      if (!pin) return;
+
+      var payload = {
+        action: "hapusLaporan",
+        idLaporan: idLaporan,
+        pinAdmin: pin,
+        pinGuru: pin
+      };
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.status === "success") {
+            alert("✅ Laporan berhasil dihapus!");
+            cariProfilSiswa();
+          } else {
+            alert("⚠️ " + res.message);
           }
         })
-        .catch(function(err) { alert("Error koneksi profil: " + err); });
+        .hapusLaporan(payload);
+    }
+
+    function eksekusiEditLaporan(idLaporan, kategoriLama, detailLama, poinLama) {
+      var detailBaru = prompt("Edit Detail Laporan:", detailLama);
+      if (detailBaru === null) return;
+
+      var poinBaru = prompt("Edit Nilai Poin (contoh: -1 atau 5):", poinLama);
+      if (poinBaru === null) return;
+
+      var pin = prompt("Masukkan PIN Admin untuk konfirmasi edit:");
+      if (!pin) {
+        alert("PIN Admin wajib diisi!");
+        return;
+      }
+
+      var payload = {
+        action: "editLaporan",
+        idLaporan: idLaporan,
+        detailLaporan: detailBaru,
+        poin: poinBaru,
+        pinAdmin: pin,
+        pinGuru: pin
+      };
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res.status === "success") {
+            alert("✅ Laporan berhasil diperbarui!");
+            cariProfilSiswa();
+          } else {
+            alert("⚠️ " + res.message);
+          }
+        })
+        .withFailureHandler(function(err) {
+          alert("Error edit: " + err.message);
+        })
+        .editLaporan(payload);
     }
 
     function renderSelectPoin(data) {
@@ -618,31 +668,15 @@
       var detailVal = document.getElementById('detailLaporan').value;
       var tglVal = document.getElementById('waktuKejadian').value;
 
-      if (poinVal >= 0) {
-        eksekusiSimpanLaporan();
-        return;
-      }
+      var nisArr = arraySiswaTerpilih.map(function(s) { return s.nis; });
 
-      var btn = document.getElementById('btnSubmit');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memeriksa riwayat hari ini...';
-
-      var nisArr = arraySiswaTerpilih.map(function(s) { return s.nis; }).join(",");
-      var urlCek = API_URL + "?action=cekDuplikasi&nisList=" + encodeURIComponent(nisArr) + 
-                   "&detail=" + encodeURIComponent(detailVal) + 
-                   "&tanggal=" + encodeURIComponent(tglVal);
-
-      fetch(urlCek, { method: "GET", redirect: "follow" })
-        .then(function(res) { return res.json(); })
-        .then(function(res) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
-
-          if (res.status === "success" && res.duplikasi && res.duplikasi.length > 0) {
+      google.script.run
+        .withSuccessHandler(function(duplikasi) {
+          if (duplikasi && duplikasi.length > 0) {
             var containerList = document.getElementById('listDetailDuplikasi');
             var html = '';
-            for (var d = 0; d < res.duplikasi.length; d++) {
-              var item = res.duplikasi[d];
+            for (var d = 0; d < duplikasi.length; d++) {
+              var item = duplikasi[d];
               html += '<div>• <b>' + item.nama + '</b> dilaporkan oleh <b>' + item.pelapor + '</b>' + (item.jam ? ' (Pukul ' + item.jam + ')' : '') + '</div>';
             }
             containerList.innerHTML = html;
@@ -651,11 +685,7 @@
             eksekusiSimpanLaporan();
           }
         })
-        .catch(function(err) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
-          eksekusiSimpanLaporan();
-        });
+        .cekDuplikasiHarian(nisArr, detailVal, tglVal);
     }
 
     function batalSimpanDuplikasi() {
@@ -670,7 +700,6 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Menyimpan Laporan (' + arraySiswaTerpilih.length + ' siswa)...';
 
       var formData = {
-        action: "simpanLaporan",
         waktuKejadian: document.getElementById('waktuKejadian').value,
         guruPelapor: document.getElementById('guruPelapor').value,
         daftarSiswa: arraySiswaTerpilih,
@@ -680,42 +709,38 @@
         pinGuru: document.getElementById('pinGuru').value
       };
 
-      fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(formData)
-      })
-      .then(function(res) { return res.json(); })
-      .then(function(res) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
-        if (res.status === "success") {
-          var listWa = res.daftarWa || [];
-          var containerWa = document.getElementById('containerTombolWa');
-          containerWa.innerHTML = '';
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+          if (res.status === "success") {
+            var listWa = res.daftarWa || [];
+            var containerWa = document.getElementById('containerTombolWa');
+            containerWa.innerHTML = '';
 
-          for (var w = 0; w < listWa.length; w++) {
-            var d = listWa[w];
-            var textWa = "Yth. Bapak/Ibu Wali Kelas " + d.kelas + " (" + d.namaWalas + "),\n\nInformasi Kedisiplinan Siswa dari Tim Tatib/Guru Piket MAN 2 Kulon Progo:\n• Nama: " + d.namaSiswa + "\n• NIS: " + d.nis + "\n• Waktu Kejadian: " + d.waktu + "\n• Laporan: " + d.detail + "\n• Poin Pengurangan: " + d.poin + "\n• Pelapor: " + d.pelapor + "\n\nMohon dapat ditindaklanjuti atau dikonfirmasikan kepada siswa/orang tua murid yang bersangkutan. Terima kasih.";
-            var urlWa = "https://api.whatsapp.com/send?phone=" + d.noWa + "&text=" + encodeURIComponent(textWa);
+            for (var w = 0; w < listWa.length; w++) {
+              var d = listWa[w];
+              var textWa = "Yth. Bapak/Ibu Wali Kelas " + d.kelas + " (" + d.namaWalas + "),\n\nInformasi Kedisiplinan Siswa dari Tim Tatib/Guru Piket MAN 2 Kulon Progo:\n• Nama: " + d.namaSiswa + "\n• NIS: " + d.nis + "\n• Waktu Kejadian: " + d.waktu + "\n• Laporan: " + d.detail + "\n• Poin Pengurangan: " + d.poin + "\n• Pelapor: " + d.pelapor + "\n\nMohon dapat ditindaklanjuti atau dikonfirmasikan kepada siswa/orang tua murid yang bersangkutan. Terima kasih.";
+              var urlWa = "https://api.whatsapp.com/send?phone=" + d.noWa + "&text=" + encodeURIComponent(textWa);
 
-            containerWa.innerHTML += 
-              '<a href="' + urlWa + '" target="_blank" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-2.5 rounded-xl text-xs flex items-center justify-between shadow">' +
-                '<span><i class="fa-brands fa-whatsapp text-sm mr-1"></i> WA Walas ' + d.namaSiswa + ' (' + d.kelas + ')</span>' +
-                '<i class="fa-solid fa-arrow-right"></i>' +
-              '</a>';
+              containerWa.innerHTML += 
+                '<a href="' + urlWa + '" target="_blank" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-2.5 rounded-xl text-xs flex items-center justify-between shadow">' +
+                  '<span><i class="fa-brands fa-whatsapp text-sm mr-1"></i> WA Walas ' + d.namaSiswa + ' (' + d.kelas + ')</span>' +
+                  '<i class="fa-solid fa-arrow-right"></i>' +
+                '</a>';
+            }
+
+            document.getElementById('modalWa').classList.remove('hidden');
+          } else {
+            alert("⚠️ " + res.message);
           }
-
-          document.getElementById('modalWa').classList.remove('hidden');
-        } else {
-          alert("⚠️ " + res.message);
-        }
-      })
-      .catch(function(err) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
-        alert("Error simpan: " + err);
-      });
+        })
+        .withFailureHandler(function(err) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Laporan';
+          alert("Error simpan: " + err.message);
+        })
+        .simpanLaporan(formData);
     }
 
     function closeModal() {
