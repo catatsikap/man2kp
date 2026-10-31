@@ -282,18 +282,35 @@
       </div>
     </div>
 
-    <!-- Modal WA Multi-Siswa -->
+    <!-- Modal WA Multi-Siswa & SPID-Sikap -->
     <div id="modalWa" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
       <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
           <i class="fa-solid fa-check"></i>
         </div>
         <h3 class="text-base font-bold text-slate-800">Laporan Berhasil Disimpan!</h3>
-        <p class="text-xs text-slate-600">Klik tombol di bawah untuk meneruskan notifikasi otomatis ke WhatsApp Wali Kelas masing-masing siswa:</p>
+        <p class="text-xs text-slate-600">Klik tombol di bawah untuk meneruskan notifikasi otomatis ke WhatsApp Wali Kelas:</p>
         
-        <div id="containerTombolWa" class="space-y-2 max-h-48 overflow-y-auto text-left pr-1"></div>
+        <div id="containerTombolWa" class="space-y-2 max-h-36 overflow-y-auto text-left pr-1"></div>
 
-        <button onclick="closeModal()" class="text-xs text-slate-400 underline mt-2 block mx-auto">Tutup / Buat Laporan Baru</button>
+        <!-- BANNER OPSIONAL: SPID-SIKAP SURVEI DAMPAK INOVASI -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
+            <h4 class="text-[11px] font-bold text-blue-900 leading-tight">
+              SPID-Sikap <span class="font-normal text-[10px] text-blue-700 block">(Survei Persepsi Inovasi & Dampak Layanan)</span>
+            </h4>
+          </div>
+          <p class="text-[10px] text-slate-600 leading-snug">
+            Bantu kami mengevaluasi dampak inovasi ini dengan mengisi survei singkat 1 menit (Opsional).
+          </p>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScRsqT2viGY6aJ_lO3u2DJpXLKNgWSjBmnJnzza9VATNiZxCQ/viewform?usp=header" target="_blank" 
+             class="inline-flex items-center justify-center gap-1.5 w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-lg text-[11px] shadow transition">
+            <i class="fa-solid fa-pen-to-square"></i> Isi Survei Dampak (SPID-Sikap)
+          </a>
+        </div>
+
+        <button onclick="closeModal()" class="text-xs text-slate-400 underline mt-1 block mx-auto">Tutup / Buat Laporan Baru</button>
       </div>
     </div>
 
@@ -399,7 +416,6 @@
       selectS.innerHTML = '<option value="">-- Sedang Memuat Data Siswa... --</option>';
       selectK.innerHTML = '<option value="">-- Sedang Memuat Data Kejadian... --</option>';
 
-      // Menggunakan fetch universal agar mendukung GAS & GitHub Pages
       fetch(API_URL + "?action=getDaftarSiswa", { method: "GET", redirect: "follow" })
         .then(function(res) { return res.json(); })
         .then(function(res) {
