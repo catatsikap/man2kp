@@ -10,14 +10,13 @@
   <style>
   body { font-family: 'Poppins', sans-serif; }
   
-  /* Mencegah auto-zoom saat klik kolom input di HP */
-  input[type="text"], input[type="number"], input[type="password"], select, textarea {
+  input[type="text"], input[type="number"], input[type="password"], input[type="email"], input[type="url"], input[type="date"], select, textarea {
     font-size: 16px !important;
   }
 
   @media print {
       body { background: white !important; padding: 0 !important; }
-      header, nav, #tabBtnInput, #tabBtnProfil, #searchProfilBox, .no-print { display: none !important; }
+      header, nav, #tabBtnInput, #tabBtnSiswa, #tabBtnProfil, #searchProfilBox, #boxAntreanPrestasi, .no-print { display: none !important; }
       #areaCetak { display: block !important; border: none !important; box-shadow: none !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
     }
   </style>
@@ -25,59 +24,56 @@
 <body class="bg-slate-100 min-h-screen pb-10 antialiased">
   <div class="max-w-md mx-auto w-full px-3 sm:px-4">
 
-  <!-- Header Elegan Ikon 3D Transparan Murni -->
+  <!-- Header -->
   <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 no-print -mt-1 pt-2 pb-2">
     <div class="max-w-md mx-auto px-4 py-1.5 flex items-center justify-between">
-      <div class="flex items-center space-x-3.5">
-        <div class="shrink-0 flex items-center justify-center w-11 h-11 relative"
+      <div class="flex items-center space-x-3">
+        <div class="shrink-0 flex items-center justify-center w-10 h-10 relative"
              style="filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.5));">
-          <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2.5 rounded-xl border border-blue-400/45 shadow-inner flex items-center justify-center w-full h-full relative">
-            <i class="fa-solid fa-clipboard-check text-emerald-400 text-2xl transform -rotate-3" 
-               style="filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.6));"></i>
-            <i class="fa-solid fa-leaf text-emerald-300 text-xs absolute -top-1 -right-1 transform rotate-45"
-               style="filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));"></i>
+          <div class="bg-gradient-to-br from-blue-800 to-blue-950 p-2 rounded-xl border border-blue-400/45 shadow-inner flex items-center justify-center w-full h-full relative">
+            <i class="fa-solid fa-clipboard-check text-emerald-400 text-xl transform -rotate-3"></i>
+            <i class="fa-solid fa-leaf text-emerald-300 text-[10px] absolute -top-1 -right-1 transform rotate-45"></i>
           </div>
         </div>
         <div>
-          <h1 class="font-extrabold text-base leading-tight tracking-wider text-white" 
-              style="text-shadow: 0px 2px 4px rgba(0,0,0,0.6);">
-            CATAT SIKAPKU
-          </h1>
-          <p class="text-[11px] text-blue-100 leading-tight font-medium mt-0.5"
-             style="text-shadow: 0px 1px 3px rgba(0,0,0,0.5);">
-            Catatan Sikap Murid Akuntabel & Transparan
-          </p>
+          <h1 class="font-extrabold text-sm leading-tight tracking-wider text-white">CATAT SIKAPKU</h1>
+          <p class="text-[10px] text-blue-100 leading-tight font-medium">Akuntabel, Restoratif & Transparan</p>
         </div>
       </div>
       
-      <!-- Badge Akses & Tombol Admin -->
       <div class="flex items-center gap-1.5">
-        <span class="text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full shadow-md border border-emerald-400 shrink-0 tracking-wider">
+        <span class="text-[9px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full shadow border border-emerald-400 shrink-0">
           MAN 2 KP
         </span>
         <button onclick="bukaModalAdmin()" id="btnStatusAdmin" class="text-[10px] bg-slate-700 hover:bg-slate-800 text-slate-200 font-bold px-2 py-1 rounded-lg shadow border border-slate-600 transition">
-          <i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Admin
+          <i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Petugas
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-md mx-auto px-4 mt-5">
+  <main class="max-w-md mx-auto px-2 mt-4">
 
-    <!-- Navigasi Tab Menu -->
-    <div class="flex bg-slate-200 p-1 rounded-xl mb-5 no-print">
-      <button onclick="switchTab('input')" id="tabBtnInput" class="w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition">
-        <i class="fa-solid fa-pen-to-square mr-1"></i> Input Kejadian
+    <!-- Navigasi 3 Tab Terpadu -->
+    <div class="grid grid-cols-3 gap-1 bg-slate-200 p-1 rounded-xl mb-5 no-print">
+      <button onclick="switchTab('input')" id="tabBtnInput" class="py-2 text-[11px] font-semibold rounded-lg bg-white text-blue-900 shadow transition">
+        <i class="fa-solid fa-pen-to-square block sm:inline mb-0.5 sm:mb-0"></i> Input Sikap
       </button>
-      <button onclick="switchTab('profil')" id="tabBtnProfil" class="w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition">
-        <i class="fa-solid fa-id-card mr-1"></i> Profil / Cetak
+      <button onclick="switchTab('siswa')" id="tabBtnSiswa" class="py-2 text-[11px] font-semibold rounded-lg text-slate-600 transition">
+        <i class="fa-solid fa-trophy block sm:inline mb-0.5 sm:mb-0 text-amber-600"></i> Klaim Prestasi
+      </button>
+      <button onclick="switchTab('profil')" id="tabBtnProfil" class="py-2 text-[11px] font-semibold rounded-lg text-slate-600 transition relative">
+        <i class="fa-solid fa-user-check block sm:inline mb-0.5 sm:mb-0"></i> Verif / Profil
+        <span id="badgeAntreanTab" class="hidden ml-0.5 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full">0</span>
       </button>
     </div>
 
-    <!-- TAB 1: FORMULIR INPUT KEJADIAN -->
+    <!-- ===================================================================== -->
+    <!-- TAB 1: FORMULIR INPUT KEJADIAN (GURU / TIM TATIB)                     -->
+    <!-- ===================================================================== -->
     <div id="tabInput" class="bg-white rounded-2xl shadow-md p-5 border border-slate-200">
       <div class="flex justify-between items-center mb-4 border-b pb-2">
-        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square text-blue-600"></i> Input Laporan Kejadian
         </h2>
         <button type="button" onclick="muatData()" class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-lg border border-blue-200">
@@ -158,11 +154,171 @@
       </form>
     </div>
 
-    <!-- TAB 2: PROFIL / CETAK -->
+    <!-- ===================================================================== -->
+    <!-- TAB 2: PORTAL SISWA (KEAMANAN OTP EMAIL & KLAIM PRESTASI)             -->
+    <!-- ===================================================================== -->
+    <div id="tabSiswa" class="hidden space-y-4">
+      <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 space-y-3">
+        <h2 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-blue-600"></i> Verifikasi Identitas Siswa (OTP Email)
+        </h2>
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">1. Masukkan NIS Anda</label>
+          <div class="flex gap-2">
+            <input type="number" id="nisInput" placeholder="Ketik NIS..."
+              class="w-full border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <button onclick="mintaOtp()" id="btnMintaOtp"
+              class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0 shadow">
+              Kirim OTP
+            </button>
+          </div>
+        </div>
+
+        <div id="boxInputEmailBaru" class="hidden pt-2 border-t border-slate-100 space-y-2">
+          <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+            <i class="fa-solid fa-envelope-open-text mr-1"></i> Email Anda belum terdaftar di database. Masukkan email aktif Anda di bawah ini untuk menerima OTP dan mengunci akun:
+          </p>
+          <div class="flex gap-2">
+            <input type="email" id="emailBaruInput" placeholder="nama@gmail.com"
+              class="w-full border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+            <button onclick="mintaOtp()"
+              class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0 shadow">
+              Kirim ke Email
+            </button>
+          </div>
+        </div>
+
+        <div id="boxInputOtp" class="hidden pt-2 border-t border-slate-100 space-y-2">
+          <p id="msgOtpTerkirim" class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl"></p>
+          <label class="block text-xs font-semibold text-slate-600">2. Masukkan 6 Digit Kode OTP dari Email</label>
+          <div class="flex gap-2">
+            <input type="number" id="otpInput" placeholder="6 digit angka..."
+              class="w-full border border-slate-300 rounded-xl px-3 py-2 text-center font-bold tracking-widest focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <button onclick="cekOtp()" id="btnCekOtp"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 shadow">
+              Masuk
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Siswa (Muncul Setelah OTP Valid) -->
+      <div id="dashboardSiswa" class="hidden space-y-4">
+        <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
+          <div>
+            <span class="text-[10px] bg-emerald-500 px-2 py-0.5 rounded-full font-bold">Terverifikasi OTP</span>
+            <h3 id="lblNamaSiswa" class="font-bold text-sm mt-1">-</h3>
+            <p id="lblKelasSiswa" class="text-xs text-blue-200">-</p>
+          </div>
+          <div class="text-right bg-white/15 px-3 py-2 rounded-xl border border-white/20">
+            <p class="text-[10px] text-blue-100">Sisa Poin</p>
+            <p id="lblSisaPoin" class="text-xl font-extrabold text-emerald-300">5</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 uppercase border-b pb-2 mb-3">
+            <i class="fa-solid fa-trophy text-amber-500 mr-1"></i> Ajukan Klaim Prestasi Baru
+          </h3>
+          <form id="formKlaim" onsubmit="kirimKlaim(event)" class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori / Tingkat Prestasi</label>
+              <select id="selectPrestasi" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50">
+                <option value="">-- Memuat Referensi Prestasi... --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kejuaraan & Penyelenggara</label>
+              <input type="text" id="ketPrestasi" required placeholder="Contoh: Juara 1 KSM Sosiologi - Kemenag Kab."
+                class="w-full border border-slate-300 rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Nomor Piagam / Nomor SK Kejuaraan</label>
+              <input type="text" id="noDokumen" required placeholder="Contoh: 123/KSM/2026 atau SK No. 45/Panitia/2026"
+                class="w-full border border-slate-300 rounded-xl px-3 py-2">
+              <p class="text-[10px] text-slate-500 mt-1">
+                <i class="fa-solid fa-file-lines text-blue-600 mr-1"></i> Jika piagam belum terbit, tuliskan <b>Nomor Surat Keputusan (SK)</b> resmi dari panitia.
+              </p>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Perolehan / Tanggal SK</label>
+              <input type="date" id="tglPrestasi" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">1. Link File Piagam atau PDF SK Panitia (Google Drive)</label>
+              <input type="url" id="linkBukti" required placeholder="https://drive.google.com/..."
+                class="w-full border border-slate-300 rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">2. Bukti Pendukung (Link Pengumuman IG/Web Panitia atau Foto Lomba)</label>
+              <input type="text" id="buktiSekunder" required placeholder="Link postingan pengumuman pemenang / foto penyerahan piala..."
+                class="w-full border border-slate-300 rounded-xl px-3 py-2">
+              <p class="text-[10px] text-slate-500 mt-1">
+                <i class="fa-solid fa-shield-check text-blue-600 mr-1"></i> Pastikan link Google Drive disetel ke <b>"Siapa saja yang memiliki link"</b>.
+              </p>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
+              <input type="checkbox" id="chkIntegritas" required class="mt-0.5 w-4 h-4 accent-red-600 shrink-0">
+              <label for="chkIntegritas" class="text-[11px] text-red-900 leading-snug">
+                <b>Pernyataan Integritas:</b> Saya menjamin dokumen Piagam/SK ini asli tanpa rekayasa editan/AI. Jika terbukti palsu, saya siap dikenai <b>sanksi poin pelanggaran berat</b> sesuai tata tertib madrasah.
+              </label>
+            </div>
+
+            <button type="submit" id="btnSubmitKlaim"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow">
+              <i class="fa-solid fa-paper-plane mr-1"></i> Kirim Pengajuan Klaim
+            </button>
+          </form>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 uppercase border-b pb-2 mb-3">
+            <i class="fa-solid fa-list-check text-blue-600 mr-1"></i> Riwayat & Progres Klaim Saya
+          </h3>
+          <div id="listRiwayatKlaimSiswa" class="space-y-2 text-xs"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: VERIFIKASI WALAS/TATIB & PROFIL CETAK SISWA                    -->
+    <!-- ===================================================================== -->
     <div id="tabProfil" class="hidden space-y-5">
+      
+      <!-- Kotak Antrean Verifikasi Prestasi -->
+      <div id="boxAntreanPrestasi" class="bg-white rounded-2xl shadow-md p-5 border border-amber-300 space-y-3 no-print">
+        <div class="flex justify-between items-center border-b pb-2">
+          <div>
+            <h2 class="text-sm font-bold text-slate-800">
+              <i class="fa-solid fa-award text-amber-500 mr-1"></i> Verifikasi Klaim Prestasi
+            </h2>
+            <p class="text-[10px] text-slate-500">Khusus Wali Kelas & Tim Tatib (Bypass >3 Hari)</p>
+          </div>
+          <button onclick="muatAntrean(false)" class="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg font-semibold border border-blue-200 shrink-0">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <select id="filterKelasVerif" onchange="renderAntreanFiltered()" class="w-full text-xs border border-slate-300 rounded-xl px-3 py-2 bg-slate-50">
+            <option value="ALL">-- Tampilkan Semua Kelas --</option>
+          </select>
+          <label class="flex items-center gap-1 text-[11px] font-semibold text-red-700 shrink-0 bg-red-50 px-2.5 py-2 rounded-xl border border-red-200">
+            <input type="checkbox" id="chkHanyaTerlambat" onchange="renderAntreanFiltered()"> >3 Hari
+          </label>
+        </div>
+
+        <div id="listAntrean" class="space-y-3 max-h-96 overflow-y-auto pr-1 text-xs">
+          <p class="text-center text-slate-400 italic py-4">Memuat antrean...</p>
+        </div>
+      </div>
+
+      <!-- Kotak Pencarian Profil Siswa -->
       <div id="searchProfilBox" class="bg-white rounded-2xl shadow-md p-5 border border-slate-200 no-print">
-        <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2 border-b pb-2">
-          <i class="fa-solid fa-magnifying-glass text-blue-600"></i> Cari Profil Sikap Siswa
+        <h2 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2 border-b pb-2">
+          <i class="fa-solid fa-magnifying-glass text-blue-600"></i> Cari Profil & Cetak Kartu Sikap
         </h2>
         <input type="text" id="searchProfilSiswaInput" onkeyup="filterProfilSiswa()" placeholder="Ketik NIS atau Nama Siswa..."
           class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-2">
@@ -172,6 +328,7 @@
         </select>
       </div>
 
+      <!-- Area Cetak Profil -->
       <div id="areaCetak" class="hidden bg-white rounded-2xl shadow-lg p-6 border border-slate-200 text-slate-800">
         <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
           <h3 class="font-bold text-base uppercase tracking-wide">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h3>
@@ -247,16 +404,16 @@
       </div>
     </div>
 
-    <!-- MODAL LOGIN ADMIN / TATIB -->
+    <!-- MODAL LOGIN PETUGAS -->
     <div id="modalAdmin" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
       <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl text-center space-y-4">
         <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
           <i class="fa-solid fa-user-shield"></i>
         </div>
-        <h3 class="text-sm font-bold text-slate-800">Verifikasi Tim Tatib</h3>
-        <p class="text-xs text-slate-500">Masukkan PIN Admin untuk mengaktifkan kontrol khusus:</p>
+        <h3 class="text-sm font-bold text-slate-800">Otorisasi Petugas</h3>
+        <p class="text-xs text-slate-500">Masukkan PIN Otorisasi Wali Kelas atau Tim Tatib:</p>
         
-        <input type="password" id="inputPinAdmin" placeholder="Masukkan PIN Admin..." 
+        <input type="password" id="inputPinAdmin" placeholder="Masukkan PIN..." 
           class="w-full text-sm border border-slate-300 rounded-xl px-3 py-2 text-center focus:ring-2 focus:ring-blue-500 focus:outline-none">
         
         <div class="flex gap-2">
@@ -282,7 +439,7 @@
       </div>
     </div>
 
-    <!-- Modal WA Multi-Siswa & SPID-Sikap -->
+    <!-- MODAL SUKSES LAPORAN GURU & SURVEI SPID-SIKAP (TITIK 1) -->
     <div id="modalWa" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
       <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-4">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
@@ -293,7 +450,7 @@
         
         <div id="containerTombolWa" class="space-y-2 max-h-36 overflow-y-auto text-left pr-1"></div>
 
-        <!-- BANNER OPSIONAL: SPID-SIKAP SURVEI DAMPAK INOVASI -->
+        <!-- Banner Survei SPID-Sikap -->
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
@@ -314,36 +471,108 @@
       </div>
     </div>
 
+    <!-- MODAL SUKSES KLAIM SISWA, WA WALAS & SURVEI SPID-SIKAP (TITIK 2) -->
+    <div id="modalWaKlaim" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 text-center space-y-3 shadow-2xl">
+        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base">Pengajuan Klaim Berhasil!</h3>
+        <p class="text-xs text-slate-600">Klik tombol di bawah untuk memberi tahu Wali Kelas lewat WhatsApp agar segera diverifikasi (maksimal 3×24 jam):</p>
+        <div id="boxBtnWa"></div>
+
+        <!-- Banner Survei SPID-Sikap untuk Siswa -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
+            <h4 class="text-[11px] font-bold text-blue-900 leading-tight">
+              SPID-Sikap <span class="font-normal text-[10px] text-blue-700 block">(Survei Kepuasan Layanan Siswa)</span>
+            </h4>
+          </div>
+          <p class="text-[10px] text-slate-600 leading-snug">
+            Bagaimana pengalamanmu mengajukan klaim prestasi secara mandiri? Berikan penilaianmu (1 menit):
+          </p>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScRsqT2viGY6aJ_lO3u2DJpXLKNgWSjBmnJnzza9VATNiZxCQ/viewform?usp=header" target="_blank" 
+             class="inline-flex items-center justify-center gap-1.5 w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-lg text-[11px] shadow transition">
+            <i class="fa-solid fa-pen-to-square"></i> Isi Survei Layanan (SPID-Sikap)
+          </a>
+        </div>
+
+        <button onclick="document.getElementById('modalWaKlaim').classList.add('hidden')" class="text-xs text-slate-400 underline block mx-auto pt-1">Tutup</button>
+      </div>
+    </div>
+
+    <!-- MODAL SELESAI VERIFIKASI WALAS & SURVEI SPID-SIKAP (TITIK 3) -->
+    <div id="modalSelesaiVerif" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 text-center space-y-3 shadow-2xl">
+        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base">Verifikasi Selesai!</h3>
+        <p id="msgHasilVerif" class="text-xs text-slate-600">-</p>
+
+        <!-- Banner Survei SPID-Sikap untuk Wali Kelas -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
+            <h4 class="text-[11px] font-bold text-blue-900 leading-tight">
+              SPID-Sikap <span class="font-normal text-[10px] text-blue-700 block">(Survei Persepsi Wali Kelas)</span>
+            </h4>
+          </div>
+          <p class="text-[10px] text-slate-600 leading-snug">
+            Mohon kesediaan Bapak/Ibu Wali Kelas mengisi survei singkat evaluasi kemudahan verifikasi digital ini:
+          </p>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScRsqT2viGY6aJ_lO3u2DJpXLKNgWSjBmnJnzza9VATNiZxCQ/viewform?usp=header" target="_blank" 
+             class="inline-flex items-center justify-center gap-1.5 w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-lg text-[11px] shadow transition">
+            <i class="fa-solid fa-pen-to-square"></i> Isi Survei Dampak (SPID-Sikap)
+          </a>
+        </div>
+
+        <button onclick="document.getElementById('modalSelesaiVerif').classList.add('hidden')" class="text-xs text-slate-400 underline block mx-auto pt-1">Tutup</button>
+      </div>
+    </div>
+
   </main>
   </div>
 
   <script>
+    // ⚠️ GANTI DENGAN URL WEB APP DEPLOYMENT PRODUKSI TERBARU ANDA
     const API_URL = "https://script.google.com/macros/s/AKfycbyNj7e8A39idFCU6NhLQL78XXZZTjEVKp4VdQZ0-ib3mlQXxOxE1FQAxFPvmqJ0Ic345g/exec";
 
     var listSiswa = [];
     var listPoin = [];
+    var listPrestasiOnly = [];
     var filteredPoinCurrent = [];
     var arraySiswaTerpilih = [];
-    var isAdminLoggedIn = false;
+    var userRole = ""; // "TATIB" atau "WALAS"
+    var pinPetugasAktif = "";
+    var currentStudent = null;
+    var semuaAntreanPending = [];
 
     document.addEventListener('DOMContentLoaded', function() {
       setDefaultDatetime();
       muatData();
+      muatAntrean(true);
 
-      if (localStorage.getItem("tatib_admin_auth") === "true") {
-        isAdminLoggedIn = true;
+      var savedRole = localStorage.getItem("tatib_role_auth");
+      var savedPin = localStorage.getItem("tatib_pin_auth");
+      if (savedRole && savedPin) {
+        userRole = savedRole;
+        pinPetugasAktif = savedPin;
         updateTampilanAdmin();
       }
     });
 
     function bukaModalAdmin() {
-      if (isAdminLoggedIn) {
-        if (confirm("Anda sudah login sebagai Admin Tatib. Ingin keluar (Logout)?")) {
-          isAdminLoggedIn = false;
-          localStorage.removeItem("tatib_admin_auth");
+      if (userRole !== "") {
+        if (confirm("Anda login sebagai " + userRole + ". Ingin keluar (Logout)?")) {
+          userRole = "";
+          pinPetugasAktif = "";
+          localStorage.removeItem("tatib_role_auth");
+          localStorage.removeItem("tatib_pin_auth");
           updateTampilanAdmin();
           switchTab('input');
-          alert("Berhasil Logout dari mode Admin.");
+          alert("Berhasil Logout.");
         }
       } else {
         document.getElementById('inputPinAdmin').value = "";
@@ -358,24 +587,37 @@
     function verifikasiPinAdmin() {
       var pin = document.getElementById('inputPinAdmin').value.trim();
       if (pin === "2026") {
-        isAdminLoggedIn = true;
-        localStorage.setItem("tatib_admin_auth", "true");
+        userRole = "TATIB";
+        pinPetugasAktif = pin;
+        localStorage.setItem("tatib_role_auth", "TATIB");
+        localStorage.setItem("tatib_pin_auth", pin);
         tutupModalAdmin();
         updateTampilanAdmin();
-        alert("🔓 Berhasil masuk sebagai Tim Tatib (Admin Mode Aktif)!");
+        alert("🔓 Otorisasi Tim Tatib Aktif!");
+      } else if (pin === "WALAS26") {
+        userRole = "WALAS";
+        pinPetugasAktif = pin;
+        localStorage.setItem("tatib_role_auth", "WALAS");
+        localStorage.setItem("tatib_pin_auth", pin);
+        tutupModalAdmin();
+        updateTampilanAdmin();
+        alert("🔓 Otorisasi Wali Kelas Aktif!");
       } else {
-        alert("❌ PIN Admin Salah!");
+        alert("❌ PIN Otorisasi Salah!");
       }
     }
 
     function updateTampilanAdmin() {
       var btn = document.getElementById('btnStatusAdmin');
-      if (isAdminLoggedIn) {
+      if (userRole === "TATIB") {
         btn.className = "text-[10px] bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1 rounded-lg shadow border border-red-500 transition";
-        btn.innerHTML = '<i class="fa-solid fa-shield-halved text-[9px] mr-0.5"></i> Admin Aktif';
+        btn.innerHTML = '<i class="fa-solid fa-shield-halved text-[9px] mr-0.5"></i> Tatib Aktif';
+      } else if (userRole === "WALAS") {
+        btn.className = "text-[10px] bg-amber-600 hover:bg-amber-700 text-white font-bold px-2 py-1 rounded-lg shadow border border-amber-500 transition";
+        btn.innerHTML = '<i class="fa-solid fa-chalkboard-user text-[9px] mr-0.5"></i> Walas Aktif';
       } else {
         btn.className = "text-[10px] bg-slate-700 hover:bg-slate-800 text-slate-200 font-bold px-2 py-1 rounded-lg shadow border border-slate-600 transition";
-        btn.innerHTML = '<i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Admin';
+        btn.innerHTML = '<i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Petugas';
       }
     }
 
@@ -386,27 +628,33 @@
     }
 
     function switchTab(tab) {
-      if (tab === 'profil' && !isAdminLoggedIn) {
-        alert("🔒 Akses Terbatas! Fitur Profil & Cetak hanya dapat dibuka oleh Admin/Tim Tatib.");
+      if (tab === 'profil' && userRole === "") {
+        alert("🔒 Akses Terbatas! Silakan masukkan PIN Otorisasi Wali Kelas atau Tim Tatib terlebih dahulu.");
         bukaModalAdmin();
         return;
       }
 
-      var tabInput = document.getElementById('tabInput');
-      var tabProfil = document.getElementById('tabProfil');
-      var btnI = document.getElementById('tabBtnInput');
-      var btnP = document.getElementById('tabBtnProfil');
+      document.getElementById('tabInput').classList.add('hidden');
+      document.getElementById('tabSiswa').classList.add('hidden');
+      document.getElementById('tabProfil').classList.add('hidden');
+
+      var activeClass = "py-2 text-[11px] font-semibold rounded-lg bg-white text-blue-900 shadow transition relative";
+      var inactiveClass = "py-2 text-[11px] font-semibold rounded-lg text-slate-600 transition relative";
+
+      document.getElementById('tabBtnInput').className = inactiveClass;
+      document.getElementById('tabBtnSiswa').className = inactiveClass;
+      document.getElementById('tabBtnProfil').className = inactiveClass;
 
       if (tab === 'input') {
-        tabInput.classList.remove('hidden');
-        tabProfil.classList.add('hidden');
-        btnI.className = "w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition";
-        btnP.className = "w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition";
-      } else {
-        tabInput.classList.add('hidden');
-        tabProfil.classList.remove('hidden');
-        btnP.className = "w-1/2 py-2 text-xs font-semibold rounded-lg bg-white text-blue-900 shadow transition";
-        btnI.className = "w-1/2 py-2 text-xs font-semibold rounded-lg text-slate-600 transition";
+        document.getElementById('tabInput').classList.remove('hidden');
+        document.getElementById('tabBtnInput').className = activeClass;
+      } else if (tab === 'siswa') {
+        document.getElementById('tabSiswa').classList.remove('hidden');
+        document.getElementById('tabBtnSiswa').className = activeClass;
+      } else if (tab === 'profil') {
+        document.getElementById('tabProfil').classList.remove('hidden');
+        document.getElementById('tabBtnProfil').className = activeClass;
+        muatAntrean(false);
       }
     }
 
@@ -424,7 +672,6 @@
           renderSelectProfilSiswa(listSiswa);
         })
         .catch(function(err) {
-          console.log("Gagal siswa: ", err);
           selectS.innerHTML = '<option value="">-- Gagal Memuat Data Siswa --</option>';
         });
 
@@ -433,12 +680,306 @@
         .then(function(res) {
           listPoin = Array.isArray(res) ? res : (res.data || []);
           renderSelectPoin(listPoin);
+          renderDropdownPrestasiSiswa(listPoin);
         })
         .catch(function(err) {
-          console.log("Gagal poin: ", err);
           selectK.innerHTML = '<option value="">-- Gagal Memuat Referensi Poin --</option>';
         });
     }
+
+    // =========================================================================
+    // PORTAL SISWA: OTP EMAIL HYBRID & KLAIM PRESTASI PRODUKSI
+    // =========================================================================
+
+    function renderDropdownPrestasiSiswa(data) {
+      listPrestasiOnly = (data || []).filter(function(p) { return Number(p.poin) > 0; });
+      var select = document.getElementById('selectPrestasi');
+      if (listPrestasiOnly.length === 0) {
+        select.innerHTML = '<option value="">-- Belum ada referensi kategori prestasi --</option>';
+        return;
+      }
+
+      var html = '<option value="">-- Pilih Jenis Prestasi --</option>';
+      for (var i = 0; i < listPrestasiOnly.length; i++) {
+        html += '<option value="' + i + '">[' + listPrestasiOnly[i].kategori + '] ' + listPrestasiOnly[i].detail + ' (+' + listPrestasiOnly[i].poin + ' Poin)</option>';
+      }
+      select.innerHTML = html;
+    }
+
+    function mintaOtp() {
+      var nis = document.getElementById('nisInput').value.trim();
+      var emailBaru = document.getElementById('emailBaruInput').value.trim();
+      if (!nis) return alert("Masukkan NIS Anda!");
+
+      var btn = document.getElementById('btnMintaOtp');
+      btn.disabled = true;
+      btn.innerText = "Mengirim...";
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "kirimOtpSiswa", nis: nis, emailInput: emailBaru })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.innerText = "Kirim OTP";
+        if (res.status === "success") {
+          document.getElementById('boxInputEmailBaru').classList.add('hidden');
+          document.getElementById('msgOtpTerkirim').innerText = res.message;
+          document.getElementById('boxInputOtp').classList.remove('hidden');
+        } else if (res.status === "need_email") {
+          document.getElementById('boxInputEmailBaru').classList.remove('hidden');
+          document.getElementById('emailBaruInput').focus();
+        } else {
+          alert("⚠️ " + res.message);
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.innerText = "Kirim OTP";
+        alert("Error koneksi: " + err);
+      });
+    }
+
+    function cekOtp() {
+      var nis = document.getElementById('nisInput').value.trim();
+      var otp = document.getElementById('otpInput').value.trim();
+      if (!otp) return alert("Masukkan 6 digit kode OTP!");
+
+      var btn = document.getElementById('btnCekOtp');
+      btn.disabled = true;
+      btn.innerText = "Cek...";
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "verifikasiOtpSiswa", nis: nis, otp: otp })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.innerText = "Masuk";
+        if (res.status === "success") {
+          currentStudent = res.siswa;
+          document.getElementById('lblNamaSiswa').innerText = res.siswa.nama;
+          document.getElementById('lblKelasSiswa').innerText = "NIS: " + res.siswa.nis + " | Kelas: " + res.siswa.kelas;
+          document.getElementById('lblSisaPoin').innerText = res.sisaPoin;
+          renderRiwayatKlaimSiswa(res.riwayatKlaim);
+          document.getElementById('dashboardSiswa').classList.remove('hidden');
+        } else {
+          alert("❌ " + res.message);
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.innerText = "Masuk";
+        alert("Error koneksi: " + err);
+      });
+    }
+
+    function renderRiwayatKlaimSiswa(list) {
+      var box = document.getElementById('listRiwayatKlaimSiswa');
+      if (!list || list.length === 0) {
+        box.innerHTML = '<p class="text-center text-slate-400 italic py-2">Belum ada pengajuan klaim.</p>';
+        return;
+      }
+      var html = '';
+      for (var i = 0; i < list.length; i++) {
+        var r = list[i];
+        var badge = r.status === "PENDING" ? '<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[10px] font-bold">Menunggu</span>' :
+                    r.status === "APPROVED" ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[10px] font-bold">Disetujui (+' + r.poin + ')</span>' :
+                    '<span class="bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-[10px] font-bold">Ditolak</span>';
+        html += '<div class="border border-slate-200 p-2.5 rounded-xl bg-slate-50 space-y-1">' +
+                  '<div class="flex justify-between font-bold text-slate-800"><span>' + r.jenis + '</span>' + badge + '</div>' +
+                  '<p class="text-slate-600">' + r.keterangan + ' <span class="text-[10px] text-slate-500">(No. Dok: ' + r.noDokumen + ')</span></p>' +
+                  (r.catatan ? '<p class="text-[10px] text-slate-500 italic">Catatan: ' + r.catatan + '</p>' : '') +
+                '</div>';
+      }
+      box.innerHTML = html;
+    }
+
+    function kirimKlaim(e) {
+      e.preventDefault();
+      if (!currentStudent) return;
+
+      var idx = document.getElementById('selectPrestasi').value;
+      var item = listPrestasiOnly[idx];
+      var btn = document.getElementById('btnSubmitKlaim');
+      btn.disabled = true;
+      btn.innerText = "Mengirim...";
+
+      var payload = {
+        action: "ajukanKlaimPrestasi",
+        nis: currentStudent.nis,
+        namaSiswa: currentStudent.nama,
+        kelasSiswa: currentStudent.kelas,
+        emailSiswa: currentStudent.email,
+        kategori: item.kategori,
+        jenisPrestasi: item.detail,
+        keterangan: document.getElementById('ketPrestasi').value.trim(),
+        noDokumen: document.getElementById('noDokumen').value.trim(),
+        tglPerolehan: document.getElementById('tglPrestasi').value,
+        linkBukti: document.getElementById('linkBukti').value.trim(),
+        buktiSekunder: document.getElementById('buktiSekunder').value.trim(),
+        poin: item.poin
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Kirim Pengajuan Klaim';
+        if (res.status === "success") {
+          document.getElementById('formKlaim').reset();
+          muatAntrean(true);
+
+          fetch(API_URL + "?action=getRiwayatKlaimSiswa&nis=" + encodeURIComponent(currentStudent.nis))
+            .then(function(r) { return r.json(); })
+            .then(function(upd) {
+              if (upd.status === "success") {
+                document.getElementById('lblSisaPoin').innerText = upd.sisaPoin;
+                renderRiwayatKlaimSiswa(upd.riwayatKlaim);
+              }
+            });
+
+          var pesanWa = "Assalamu'alaikum Bapak/Ibu " + res.walas.nama + ",\n\nSaya *" + currentStudent.nama + "* (" + currentStudent.kelas + ") baru mengajukan klaim poin prestasi di *Catat SikapKU*:\n• Prestasi: " + payload.jenisPrestasi + " (" + payload.keterangan + ")\n• No. Piagam/SK: " + payload.noDokumen + "\n• Dokumen: " + payload.linkBukti + "\n• Bukti Pendukung: " + payload.buktiSekunder + "\n\nMohon berkenan untuk memverifikasi pengajuan saya. Terima kasih.";
+          var urlWa = "https://api.whatsapp.com/send?phone=" + res.walas.noWa + "&text=" + encodeURIComponent(pesanWa);
+          document.getElementById('boxBtnWa').innerHTML = '<a href="' + urlWa + '" target="_blank" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow"><i class="fa-brands fa-whatsapp mr-1"></i> Kirim WA ke Wali Kelas (' + res.walas.nama + ')</a>';
+          document.getElementById('modalWaKlaim').classList.remove('hidden');
+        } else {
+          alert("⚠️ " + res.message);
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> Kirim Pengajuan Klaim';
+        alert("Error kirim klaim: " + err);
+      });
+    }
+
+    // =========================================================================
+    // VERIFIKASI ANTREAN PRESTASI (WALI KELAS & BYPASS TATIB >3 HARI)
+    // =========================================================================
+
+    function muatAntrean(silentBadgeOnly) {
+      var box = document.getElementById('listAntrean');
+      if (!silentBadgeOnly) box.innerHTML = '<p class="text-center text-slate-400 italic py-3">Memuat antrean...</p>';
+
+      fetch(API_URL + "?action=getAntreanPrestasi", { method: "GET", redirect: "follow" })
+        .then(function(res) { return res.json(); })
+        .then(function(res) {
+          semuaAntreanPending = (res.data || []).filter(function(x) { return x.status === "PENDING"; });
+          
+          var badge = document.getElementById('badgeAntreanTab');
+          if (semuaAntreanPending.length > 0) {
+            badge.innerText = semuaAntreanPending.length;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+
+          var selKelas = document.getElementById('filterKelasVerif');
+          var kelasUnik = [...new Set(semuaAntreanPending.map(x => x.kelas))].sort();
+          var optHtml = '<option value="ALL">-- Semua Kelas (' + semuaAntreanPending.length + ' Antrean) --</option>';
+          kelasUnik.forEach(k => { optHtml += '<option value="' + k + '">Kelas ' + k + '</option>'; });
+          selKelas.innerHTML = optHtml;
+
+          if (!silentBadgeOnly) renderAntreanFiltered();
+        })
+        .catch(function(err) {
+          if (!silentBadgeOnly) box.innerHTML = '<p class="text-center text-red-500 py-2">Gagal memuat antrean.</p>';
+        });
+    }
+
+    function renderAntreanFiltered() {
+      var box = document.getElementById('listAntrean');
+      var filterKelas = document.getElementById('filterKelasVerif').value;
+      var hanyaTerlambat = document.getElementById('chkHanyaTerlambat').checked;
+
+      var hasil = semuaAntreanPending.filter(function(p) {
+        var matchKelas = (filterKelas === "ALL" || p.kelas === filterKelas);
+        var matchTelat = (!hanyaTerlambat || p.isTerlambat);
+        return matchKelas && matchTelat;
+      });
+
+      if (hasil.length === 0) {
+        box.innerHTML = '<p class="text-center text-slate-400 italic py-4">Tidak ada antrean klaim prestasi sesuai filter.</p>';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < hasil.length; i++) {
+        var p = hasil[i];
+        var badgeUsia = p.isTerlambat 
+          ? '<span class="bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full animate-pulse"><i class="fa-solid fa-clock mr-1"></i>Lewat ' + p.usiaHari + ' Hari (Siap Bypass Tatib)</span>'
+          : '<span class="bg-slate-200 text-slate-700 text-[9px] font-semibold px-2 py-0.5 rounded-full">Menunggu ' + p.usiaHari + ' hari</span>';
+
+        var linkSekunderHtml = (p.buktiSekunder && p.buktiSekunder.indexOf("http") === 0)
+          ? '<a href="' + p.buktiSekunder + '" target="_blank" class="text-indigo-700 underline font-semibold"><i class="fa-solid fa-link mr-1"></i>Bukti Pendukung</a>'
+          : '<span class="text-slate-600">Info: ' + p.buktiSekunder + '</span>';
+
+        html += '<div class="border ' + (p.isTerlambat ? 'border-red-300 bg-red-50/40' : 'border-amber-200 bg-amber-50/60') + ' p-3 rounded-xl space-y-2">' +
+                  '<div class="flex justify-between items-start gap-1">' +
+                    '<div>' +
+                      '<p class="font-bold text-slate-900">' + p.nama + ' (' + p.kelas + ')</p>' +
+                      '<div class="mt-0.5">' + badgeUsia + '</div>' +
+                    '</div>' +
+                    '<span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">+' + p.poin + ' Poin</span>' +
+                  '</div>' +
+                  '<p class="font-semibold text-slate-800">' + p.jenis + ' — ' + p.keterangan + '</p>' +
+                  '<p class="text-[11px] text-slate-600 font-medium"><i class="fa-solid fa-hashtag text-slate-400 mr-1"></i>No. Piagam / SK: <b>' + p.noDokumen + '</b></p>' +
+                  '<div class="flex flex-wrap gap-3 text-[11px] bg-white p-2 rounded-lg border border-slate-200">' +
+                    '<a href="' + p.linkBukti + '" target="_blank" class="text-blue-700 underline font-semibold"><i class="fa-solid fa-file-pdf mr-1"></i>Cek Piagam / SK</a>' +
+                    linkSekunderHtml +
+                  '</div>' +
+                  '<div class="flex justify-end gap-1.5 pt-1">' +
+                    '<button onclick="verifKlaim(\'' + p.idKlaim + '\', \'APPROVED\')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg font-bold shadow"><i class="fa-solid fa-check mr-1"></i>Setujui</button>' +
+                    '<button onclick="verifKlaim(\'' + p.idKlaim + '\', \'REJECTED\')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold shadow"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>' +
+                  '</div>' +
+                '</div>';
+      }
+      box.innerHTML = html;
+    }
+
+    function verifKlaim(idKlaim, status) {
+      var nama = prompt("Nama Verifikator (Wali Kelas / Tim Tatib):");
+      if (!nama) return;
+      var catatan = status === "REJECTED" ? prompt("Alasan penolakan (misal: Nomor SK tidak sesuai / bukti pendukung kurang valid):") : "Terverifikasi sah (Piagam/SK valid)";
+      if (catatan === null) return;
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "verifikasiKlaimPrestasi",
+          idKlaim: idKlaim,
+          keputusan: status,
+          catatan: catatan,
+          namaVerifikator: nama,
+          pinVerifikator: pinPetugasAktif
+        })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        if (res.status === "success") {
+          muatAntrean(false);
+          document.getElementById('msgHasilVerif').innerText = res.message;
+          document.getElementById('modalSelesaiVerif').classList.remove('hidden');
+        } else {
+          alert("⚠️ " + res.message);
+        }
+      })
+      .catch(function(err) { alert("Error verifikasi: " + err); });
+    }
+
+    // =========================================================================
+    // FUNGSI BAWAAN INPUT LAPORAN GURU, PROFIL & EDIT/HAPUS
+    // =========================================================================
 
     function renderSelectSiswa(data) {
       var select = document.getElementById('selectSiswa');
@@ -475,7 +1016,6 @@
           alert("Siswa " + s.nama + " sudah ada di daftar pilihan.");
           return;
         }
-
         arraySiswaTerpilih.push(s);
         updateTampilanDaftarSiswa();
       }
@@ -531,8 +1071,8 @@
     }
 
     function cariProfilSiswa() {
-      if (!isAdminLoggedIn) {
-        alert("🔒 Akses Terbatas! Silakan masukkan PIN Admin terlebih dahulu.");
+      if (userRole === "") {
+        alert("🔒 Akses Terbatas! Silakan masukkan PIN Otorisasi terlebih dahulu.");
         bukaModalAdmin();
         return;
       }
@@ -551,11 +1091,7 @@
             
             var sisaElem = document.getElementById('pSisaPoin');
             sisaElem.innerText = res.sisaPoin;
-            if (res.sisaPoin < 0) {
-              sisaElem.className = "text-base font-extrabold text-red-600";
-            } else {
-              sisaElem.className = "text-base font-extrabold text-emerald-700";
-            }
+            sisaElem.className = res.sisaPoin < 0 ? "text-base font-extrabold text-red-600" : "text-base font-extrabold text-emerald-700";
 
             var tbody = document.getElementById('tBodyRiwayat');
             if (res.riwayat.length === 0) {
@@ -569,7 +1105,7 @@
                 var detailClean = String(r.detail).replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 var katClean = String(r.kategori).replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
-                var tombolAksiAdmin = isAdminLoggedIn ? 
+                var tombolAksiAdmin = (userRole === "TATIB") ? 
                   '<div class="flex gap-1 mt-1.5">' +
                     '<button onclick="eksekusiEditLaporan(\'' + r.id + '\', \'' + katClean + '\', \'' + detailClean + '\', \'' + r.poin + '\')" class="text-[10px] bg-amber-500 hover:bg-amber-600 text-white px-2 py-0.5 rounded shadow"><i class="fa-solid fa-pen"></i> Edit</button>' +
                     '<button onclick="eksekusiHapusLaporan(\'' + r.id + '\')" class="text-[10px] bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded shadow"><i class="fa-solid fa-trash"></i> Hapus</button>' +
@@ -594,21 +1130,13 @@
 
     function eksekusiHapusLaporan(idLaporan) {
       if (!confirm("Apakah Anda yakin ingin menghapus laporan ini secara permanen dari spreadsheet?")) return;
-
-      var pin = prompt("Masukkan PIN Admin untuk konfirmasi hapus:");
+      var pin = prompt("Masukkan PIN Admin Tatib untuk konfirmasi hapus:");
       if (!pin) return;
-
-      var payload = {
-        action: "hapusLaporan",
-        idLaporan: idLaporan,
-        pinAdmin: pin,
-        pinGuru: pin
-      };
 
       fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ action: "hapusLaporan", idLaporan: idLaporan, pinAdmin: pin, pinGuru: pin })
       })
       .then(function(res) { return res.json(); })
       .then(function(res) {
@@ -625,29 +1153,15 @@
     function eksekusiEditLaporan(idLaporan, kategoriLama, detailLama, poinLama) {
       var detailBaru = prompt("Edit Detail Laporan:", detailLama);
       if (detailBaru === null) return;
-
       var poinBaru = prompt("Edit Nilai Poin (contoh: -1 atau 5):", poinLama);
       if (poinBaru === null) return;
-
-      var pin = prompt("Masukkan PIN Admin untuk konfirmasi edit:");
-      if (!pin) {
-        alert("PIN Admin wajib diisi!");
-        return;
-      }
-
-      var payload = {
-        action: "editLaporan",
-        idLaporan: idLaporan,
-        detailLaporan: detailBaru,
-        poin: poinBaru,
-        pinAdmin: pin,
-        pinGuru: pin
-      };
+      var pin = prompt("Masukkan PIN Admin Tatib untuk konfirmasi edit:");
+      if (!pin) return;
 
       fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ action: "editLaporan", idLaporan: idLaporan, detailLaporan: detailBaru, poin: poinBaru, pinAdmin: pin, pinGuru: pin })
       })
       .then(function(res) { return res.json(); })
       .then(function(res) {
@@ -700,13 +1214,11 @@
 
     function handleFormSubmit(e) {
       e.preventDefault();
-
       if (arraySiswaTerpilih.length === 0) {
         alert("⚠️ Minimal wajib menambah 1 siswa terlebih dahulu ke daftar!");
         return;
       }
 
-      var poinVal = Number(document.getElementById('poin').value) || 0;
       var detailVal = document.getElementById('detailLaporan').value;
       var tglVal = document.getElementById('waktuKejadian').value;
 
