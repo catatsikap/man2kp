@@ -699,7 +699,7 @@
       select.innerHTML = html;
     }
 
-    function mintaOtp() {
+function mintaOtp() {
   var nis = document.getElementById('nisInput').value.trim();
   var emailBaru = document.getElementById('emailBaruInput') ? document.getElementById('emailBaruInput').value.trim() : "";
   if (!nis) return alert("Masukkan NIS Anda!");
@@ -708,31 +708,18 @@
   btn.disabled = true;
   btn.innerText = "Mengirim...";
 
-  var payloadData = {
-    action: "kirimOtpSiswa",
-    nis: nis,
-    emailInput: emailBaru
-  };
+  // Menggunakan metode GET via URL parameter untuk bypass masalah POST di GAS
+  var targetUrl = API_URL + "?action=kirimOtpSiswa&nis=" + encodeURIComponent(nis) + "&emailInput=" + encodeURIComponent(emailBaru);
 
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payloadData),
+  fetch(targetUrl, {
+    method: "GET",
     redirect: "follow"
   })
-  .then(function(res) { return res.text(); }) // Ambil sebagai text dulu untuk cegah crash parse
-  .then(function(textRes) {
+  .then(function(res) { return res.json(); })
+  .then(function(res) {
     btn.disabled = false;
     btn.innerText = "Kirim OTP";
     
-    var res;
-    try {
-      res = JSON.parse(textRes);
-    } catch(e) {
-      alert("❌ Respon Server Gagal Diurai: " + textRes);
-      return;
-    }
-
     if (res.status === "success") {
       if (document.getElementById('boxInputEmailBaru')) document.getElementById('boxInputEmailBaru').classList.add('hidden');
       document.getElementById('msgOtpTerkirim').innerText = res.message;
