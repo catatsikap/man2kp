@@ -450,6 +450,7 @@
         
         <div id="containerTombolWa" class="space-y-2 max-h-36 overflow-y-auto text-left pr-1"></div>
 
+        <!-- Banner Survei SPID-Sikap -->
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
@@ -472,7 +473,7 @@
 
     <!-- MODAL SUKSES KLAIM SISWA, WA WALAS & SURVEI SPID-SIKAP (TITIK 2) -->
     <div id="modalWaKlaim" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
-      <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-3 shadow-2xl">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 text-center space-y-3 shadow-2xl">
         <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
           <i class="fa-solid fa-trophy"></i>
         </div>
@@ -480,6 +481,7 @@
         <p class="text-xs text-slate-600">Klik tombol di bawah untuk memberi tahu Wali Kelas lewat WhatsApp agar segera diverifikasi (maksimal 3×24 jam):</p>
         <div id="boxBtnWa"></div>
 
+        <!-- Banner Survei SPID-Sikap untuk Siswa -->
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
@@ -502,13 +504,14 @@
 
     <!-- MODAL SELESAI VERIFIKASI WALAS & SURVEI SPID-SIKAP (TITIK 3) -->
     <div id="modalSelesaiVerif" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
-      <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center space-y-3 shadow-2xl">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-5 text-center space-y-3 shadow-2xl">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow">
           <i class="fa-solid fa-circle-check"></i>
         </div>
         <h3 class="font-bold text-slate-800 text-base">Verifikasi Selesai!</h3>
         <p id="msgHasilVerif" class="text-xs text-slate-600">-</p>
 
+        <!-- Banner Survei SPID-Sikap untuk Wali Kelas -->
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-left space-y-2 mt-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-square-poll-vertical text-blue-600 text-base shrink-0"></i>
@@ -533,14 +536,15 @@
   </div>
 
   <script>
-    // ⚠️ URL WEB APP PRODUKSI TERBARU ANDA
+    // ⚠️ GANTI DENGAN URL WEB APP DEPLOYMENT PRODUKSI TERBARU ANDA
     const API_URL = "https://script.google.com/macros/s/AKfycbwvGYg0CiaKNQIf7hBnWvYXbYoyd0qW8c1326GbxXwucKp7xjKYW1Vu2XvHKEguPzdXsw/exec";
+
     var listSiswa = [];
     var listPoin = [];
     var listPrestasiOnly = [];
     var filteredPoinCurrent = [];
     var arraySiswaTerpilih = [];
-    var userRole = ""; 
+    var userRole = ""; // "TATIB" atau "WALAS"
     var pinPetugasAktif = "";
     var currentStudent = null;
     var semuaAntreanPending = [];
@@ -683,6 +687,10 @@
         });
     }
 
+    // =========================================================================
+    // PORTAL SISWA: OTP EMAIL HYBRID & KLAIM PRESTASI PRODUKSI
+    // =========================================================================
+
     function renderDropdownPrestasiSiswa(data) {
       listPrestasiOnly = (data || []).filter(function(p) { return Number(p.poin) > 0; });
       var select = document.getElementById('selectPrestasi');
@@ -698,44 +706,41 @@
       select.innerHTML = html;
     }
 
-function mintaOtp() {
-  var nis = document.getElementById('nisInput').value.trim();
-  var emailBaru = document.getElementById('emailBaruInput') ? document.getElementById('emailBaruInput').value.trim() : "";
-  if (!nis) return alert("Masukkan NIS Anda!");
+    function mintaOtp() {
+      var nis = document.getElementById('nisInput').value.trim();
+      var emailBaru = document.getElementById('emailBaruInput').value.trim();
+      if (!nis) return alert("Masukkan NIS Anda!");
 
-  var btn = document.getElementById('btnMintaOtp');
-  btn.disabled = true;
-  btn.innerText = "Mengirim...";
+      var btn = document.getElementById('btnMintaOtp');
+      btn.disabled = true;
+      btn.innerText = "Mengirim...";
 
-  // Menggunakan metode GET via URL parameter untuk bypass masalah POST di GAS
-  var targetUrl = API_URL + "?action=kirimOtpSiswa&nis=" + encodeURIComponent(nis) + "&emailInput=" + encodeURIComponent(emailBaru);
-
-  fetch(targetUrl, {
-    method: "GET",
-    redirect: "follow"
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(res) {
-    btn.disabled = false;
-    btn.innerText = "Kirim OTP";
-    
-    if (res.status === "success") {
-      if (document.getElementById('boxInputEmailBaru')) document.getElementById('boxInputEmailBaru').classList.add('hidden');
-      document.getElementById('msgOtpTerkirim').innerText = res.message;
-      document.getElementById('boxInputOtp').classList.remove('hidden');
-    } else if (res.status === "need_email") {
-      if (document.getElementById('boxInputEmailBaru')) document.getElementById('boxInputEmailBaru').classList.remove('hidden');
-      if (document.getElementById('emailBaruInput')) document.getElementById('emailBaruInput').focus();
-    } else {
-      alert("⚠️ " + res.message);
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "kirimOtpSiswa", nis: nis, emailInput: emailBaru })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.innerText = "Kirim OTP";
+        if (res.status === "success") {
+          document.getElementById('boxInputEmailBaru').classList.add('hidden');
+          document.getElementById('msgOtpTerkirim').innerText = res.message;
+          document.getElementById('boxInputOtp').classList.remove('hidden');
+        } else if (res.status === "need_email") {
+          document.getElementById('boxInputEmailBaru').classList.remove('hidden');
+          document.getElementById('emailBaruInput').focus();
+        } else {
+          alert("⚠️ " + res.message);
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.innerText = "Kirim OTP";
+        alert("Error koneksi: " + err);
+      });
     }
-  })
-  .catch(function(err) {
-    btn.disabled = false;
-    btn.innerText = "Kirim OTP";
-    alert("Error koneksi jaringan: " + err);
-  });
-}
 
     function cekOtp() {
       var nis = document.getElementById('nisInput').value.trim();
@@ -749,11 +754,7 @@ function mintaOtp() {
       fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ 
-          action: "verifikasiOtpSiswa", 
-          nis: nis, 
-          otp: otp 
-        })
+        body: JSON.stringify({ action: "verifikasiOtpSiswa", nis: nis, otp: otp })
       })
       .then(function(res) { return res.json(); })
       .then(function(res) {
@@ -860,6 +861,10 @@ function mintaOtp() {
         alert("Error kirim klaim: " + err);
       });
     }
+
+    // =========================================================================
+    // VERIFIKASI ANTREAN PRESTASI (WALI KELAS & BYPASS TATIB >3 HARI)
+    // =========================================================================
 
     function muatAntrean(silentBadgeOnly) {
       var box = document.getElementById('listAntrean');
@@ -971,6 +976,10 @@ function mintaOtp() {
       })
       .catch(function(err) { alert("Error verifikasi: " + err); });
     }
+
+    // =========================================================================
+    // FUNGSI BAWAAN INPUT LAPORAN GURU, PROFIL & EDIT/HAPUS
+    // =========================================================================
 
     function renderSelectSiswa(data) {
       var select = document.getElementById('selectSiswa');
